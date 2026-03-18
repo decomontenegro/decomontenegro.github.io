@@ -950,18 +950,34 @@
     }
     .medico-card:hover::before { opacity: 1; }
 
+
+    /* Médico avatar com foto real */
     .medico-avatar {
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--s3) 0%, var(--s2) 100%);
       border: 2px solid rgba(16,185,129,.3);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 2.5rem;
       margin-bottom: 24px;
+      overflow: hidden;
+      background: var(--s3);
     }
+    .medico-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 50%;
+      filter: grayscale(15%);
+      transition: filter 0.3s;
+    }
+    .medico-card:hover .medico-avatar img {
+      filter: grayscale(0%);
+    }
+
 
     .medico-title {
       font-family: var(--font-mono);
@@ -2037,7 +2053,7 @@
 
       <div class="medicos-grid">
         <div class="medico-card fade-in fade-in-delay-1">
-          <div class="medico-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></div>
+          <div class="medico-avatar"><img src="https://traumasport.com.br/wp-content/uploads/2021/09/CESAR_CIMA.jpeg" alt="Dr. César Cima" loading="lazy" /></div>
           <div class="medico-title">Founder — TS Health Center</div>
           <div class="medico-name">Dr. César Cima</div>
           <div class="medico-crm">CRM 8430 · CE</div>
@@ -2054,7 +2070,7 @@
         </div>
 
         <div class="medico-card fade-in fade-in-delay-2">
-          <div class="medico-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg></div>
+          <div class="medico-avatar"><img src="https://traumasport.com.br/wp-content/uploads/2021/09/foto_Abaete_.jpeg" alt="Dr. Abaeté Neto" loading="lazy" /></div>
           <div class="medico-title">Médico do Esporte</div>
           <div class="medico-name">Dr. Abaeté Neto</div>
           <div class="medico-crm">Médico do Esporte · Radiologista Osteoarticular</div>
