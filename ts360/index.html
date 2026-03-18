@@ -1362,6 +1362,22 @@
     }
 
     /* =============================================
+       RESPONSIVE — 1024px (tablet)
+    ============================================= */
+    @media (max-width: 1024px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        text-align: center;
+      }
+      .hero-eyebrow { justify-content: center; }
+      .hero-subtitle { margin: 0 auto 36px; }
+      .hero-ctas { justify-content: center; }
+      .hero-badges { justify-content: center; }
+      .stats-card { max-width: 480px; margin: 0 auto; }
+    }
+
+    /* =============================================
        RESPONSIVE — 768px
     ============================================= */
     @media (max-width: 768px) {
