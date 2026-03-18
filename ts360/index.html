@@ -358,7 +358,7 @@
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 120px 0 80px;
+      padding: 140px 0 80px;
       background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16,185,129,.08) 0%, transparent 70%);
       overflow: hidden;
     }
@@ -1471,6 +1471,7 @@
         font-size: .55rem;
         padding: 8px 12px;
         line-height: 1.5;
+        top: 64px;
       }
 
       /* Comparação — vira coluna única */
@@ -1699,11 +1700,17 @@
   </div>
 
   <!-- URGENCY BAR -->
-  <div id="urgency-bar" style="background:linear-gradient(90deg,rgba(16,185,129,.12),rgba(59,130,246,.08),rgba(16,185,129,.12));border-bottom:1px solid rgba(16,185,129,.2);padding:10px 24px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:#34d399;position:sticky;top:0;z-index:101;backdrop-filter:blur(10px);">
+  <div id="urgency-bar" style="background:linear-gradient(90deg,rgba(16,185,129,.12),rgba(59,130,246,.08),rgba(16,185,129,.12));border-bottom:1px solid rgba(16,185,129,.2);padding:10px 24px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:#34d399;position:fixed;top:64px;left:0;right:0;z-index:99;backdrop-filter:blur(10px);transition:top 0.3s;">
     <span style="opacity:.5;margin-right:12px;">▸</span>
     🩺 Vagas abertas para março 2026 — Avaliação inicial disponível essa semana
     <span style="opacity:.5;margin-left:12px;">◂</span>
-    <button onclick="document.getElementById('urgency-bar').style.display='none'" style="background:none;border:none;color:rgba(52,211,153,.4);cursor:pointer;font-size:1rem;margin-left:16px;line-height:1;vertical-align:middle;">×</button>
+    <button onclick="(function(){
+  var bar = document.getElementById('urgency-bar');
+  bar.style.display='none';
+  document.getElementById('nav').style.top='0';
+  var hero = document.querySelector('.hero');
+  if(hero) hero.style.paddingTop='100px';
+})()" style="background:none;border:none;color:rgba(52,211,153,.4);cursor:pointer;font-size:1rem;margin-left:16px;line-height:1;vertical-align:middle;">×</button>
   </div>
 
   <nav id="nav">
