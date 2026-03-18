@@ -365,10 +365,17 @@
 
     .hero-inner {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: 40px;
       align-items: center;
-      overflow: visible;
+      width: 100%;
+    }
+    .hero-content {
+      min-width: 0;
+    }
+    .hero-visual {
+      min-width: 0;
+      width: 100%;
     }
 
     .hero-eyebrow {
@@ -428,11 +435,6 @@
     }
 
     /* Hero visual (stats card) */
-    .hero-visual {
-      position: relative;
-      min-width: 0;
-      overflow: hidden;
-    }
 
     .stats-card {
       background: var(--s2);
@@ -443,6 +445,7 @@
       overflow: hidden;
       box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 80px rgba(16,185,129,.06);
       width: 100%;
+      max-width: 100%;
       box-sizing: border-box;
     }
     .stats-card::before {
@@ -467,19 +470,21 @@
     .stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      gap: 16px;
     }
 
     .stat-item {
       text-align: center;
+      min-width: 0;
     }
 
     .stat-value {
       font-family: var(--font-head);
-      font-size: 2.2rem;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
       font-weight: 800;
-      line-height: 1;
+      line-height: 1.1;
       margin-bottom: 6px;
+      word-break: break-all;
     }
 
     .stat-value.green { color: var(--accent); }
@@ -489,8 +494,8 @@
 
     .stat-label {
       font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.1em;
+      font-size: 0.55rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--tt);
     }
@@ -1753,10 +1758,10 @@
   <!-- ============================================
        2. HERO
   ============================================= -->
-  <section class="hero" id="hero">
+  <section class="hero" id="hero" style="overflow-x:hidden;">
     <div class="float-orb float-orb-1"></div>
     <div class="float-orb float-orb-2"></div>
-    <div class="container" style="overflow:hidden;">
+    <div class="container">
       <div class="hero-inner">
         <div class="hero-content">
           <div class="hero-eyebrow fade-in">Programa Médico de Emagrecimento</div>
