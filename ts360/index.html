@@ -1474,6 +1474,12 @@
         top: 64px;
       }
 
+
+      /* Conformidade mobile */
+      #conformidade > .container > div[style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+
       /* Comparação — vira coluna única */
       #comparacao > .container > div[style*="grid-template-columns:1fr 1fr"] {
         grid-template-columns: 1fr !important;
@@ -1723,6 +1729,7 @@
         <li><a href="#programa">O Programa</a></li>
         <li><a href="#resultados">Resultados</a></li>
         <li><a href="#medicos">Médicos</a></li>
+        <li><a href="#conformidade">Conformidade</a></li>
         <li><a href="#planos">Planos</a></li>
         <li><a href="#planos" class="nav-cta">Quero minha vaga</a></li>
       </ul>
@@ -2092,6 +2099,95 @@
             <li>Avaliação funcional e composição corporal</li>
           </ul>
         </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================
+       7.5. SEGURANÇA & CONFORMIDADE
+  ============================================= -->
+  <section style="padding:100px 0;background:var(--bg);border-top:1px solid var(--b1);" id="conformidade">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">Segurança e Conformidade</div>
+        <h2>Tirzepatida manipulada.<br><span class="gradient-text">100% legal e regulamentada.</span></h2>
+        <p style="max-width:640px;margin:0 auto;">A manipulação magistral da Tirzepatida é expressamente permitida pela ANVISA. Trabalhamos com o melhor laboratório de manipulação do Brasil — a StinPharma — com toda a documentação regulatória em ordem.</p>
+      </div>
+
+      <!-- ANVISA destaque -->
+      <div class="fade-in" style="max-width:780px;margin:0 auto 60px;background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.2);border-radius:16px;padding:32px 36px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));"></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">ANVISA — Nota Técnica nº 92/2024</div>
+        <blockquote style="font-size:1rem;color:var(--ts);line-height:1.75;font-style:italic;border-left:3px solid rgba(16,185,129,.3);padding-left:20px;margin:0;">
+          "Sobre a Tirzepatida, a ANVISA aprovou em 25 de setembro de 2023 o registro do medicamento Mounjaro® […] sendo assim, a legislação sanitária <strong style="color:var(--tp);">permite que esta substância possa ser disponibilizada através de preparações magistrais</strong> desde que atendidos todos os requerimentos estabelecidos pela Resolução RDC 67/2007."
+        </blockquote>
+        <div style="margin-top:16px;font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tt);">Fonte: ANVISA — Nota Técnica nº 92/2024/SEI/COINS/GIMED/GGFIS/IRE4</div>
+      </div>
+
+      <!-- StinPharma + selos -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;" class="fade-in">
+
+        <!-- Card StinPharma -->
+        <div style="background:var(--s2);border:1px solid var(--b1);border-radius:16px;padding:36px;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Laboratório Parceiro</div>
+          <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--tp);margin-bottom:6px;">StinPharma</div>
+          <div style="font-size:.85rem;color:var(--ts);line-height:1.7;margin-bottom:24px;">
+            Melhor laboratório de manipulação do Brasil. Especializado em medicina personalizada — cada fórmula é produzida exclusivamente para um único paciente, de acordo com suas características fisiológicas e metabólicas.
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--ts);">
+              <span style="color:var(--accent);font-weight:700;">✓</span>
+              Autorização de Funcionamento (AFE) — ANVISA
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--ts);">
+              <span style="color:var(--accent);font-weight:700;">✓</span>
+              Autorização Especial (AE) — substâncias controladas
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--ts);">
+              <span style="color:var(--accent);font-weight:700;">✓</span>
+              Boas Práticas de Manipulação — RDC 67/2007
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--ts);">
+              <span style="color:var(--accent);font-weight:700;">✓</span>
+              CRF-SP regularizado | Licenciado em Barueri/SP
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--ts);">
+              <span style="color:var(--accent);font-weight:700;">✓</span>
+              IFA importado por fornecedores autorizados pela ANVISA
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--ts);">
+              <span style="color:var(--accent);font-weight:700;">✓</span>
+              Inspeção Vigilância Sanitária de Barueri — aprovada
+            </div>
+          </div>
+        </div>
+
+        <!-- O que é medicina personalizada -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:16px;padding:28px;">
+            <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--tp);margin-bottom:10px;">Por que manipulado e não industrializado?</div>
+            <p style="font-size:.88rem;color:var(--ts);line-height:1.7;">
+              O medicamento manipulado é produzido especificamente para <strong style="color:var(--tp);">você</strong> — com a dose, concentração e forma farmacêutica adequada ao seu caso. Isso é <strong style="color:var(--tp);">medicina personalizada</strong>: diferente de uma caixa de prateleira feita para um perfil genérico.
+            </p>
+          </div>
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:16px;padding:28px;">
+            <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--tp);margin-bottom:10px;">E o alerta das sociedades médicas?</div>
+            <p style="font-size:.88rem;color:var(--ts);line-height:1.7;">
+              O alerta comparou produtos <strong style="color:var(--tp);">clandestinos</strong> (contrabandeados) com produtos <strong style="color:var(--tp);">manipulados regulamentados</strong> — que são coisas completamente diferentes. A própria ANVISA, em nota técnica oficial, deixou claro que a manipulação da Tirzepatida é permitida e regulamentada quando feita por farmácia habilitada.
+            </p>
+          </div>
+          <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.15);border-radius:16px;padding:28px;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Resumo</div>
+            <p style="font-size:.95rem;color:var(--tp);font-weight:600;line-height:1.6;">
+              Legal ✓ Regulamentado ✓ Personalizado ✓ Supervisionado ✓
+            </p>
+            <p style="font-size:.82rem;color:var(--ts);margin-top:8px;">
+              Toda prescrição é emitida por médico habilitado, com acompanhamento clínico mensal e protocolo de segurança rigoroso.
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
