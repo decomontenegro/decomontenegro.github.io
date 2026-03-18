@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TS 360° — Programa de Emagrecimento Médico com Tirzepatida | TS Health Center</title>
+  <meta name="description" content="Programa de emagrecimento médico com Tirzepatida. Supervisão médica real, protocolo personalizado, resultados em 90 dias. TS Health Center — Fortaleza-CE." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* =============================================
+       DESIGN SYSTEM — TS 360° (based on cb.deco.ooo)
+    ============================================= */
+    :root {
+      --bg: #06080f;
+      --s1: #0b1120;
+      --s2: #0f1928;
+      --s3: #141f32;
+      --b1: rgba(255,255,255,.07);
+      --b3: rgba(255,255,255,.13);
+      --tp: #ffffff;
+      --ts: #8aa4c8;
+      --tt: #4a6585;
+      --accent: #10b981;
+      --accent-light: #34d399;
+      --accent-dark: #059669;
+      --blue: #3b82f6;
+      --gold: #f59e0b;
+      --radius: 12px;
+      --radius-lg: 20px;
+      --font-head: 'Syne', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--tp);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Grid overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(16,185,129,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16,185,129,.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* =============================================
+       TYPOGRAPHY
+    ============================================= */
+    h1, h2, h3, h4, h5 {
+      font-family: var(--font-head);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--blue) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* =============================================
+       LAYOUT
+    ============================================= */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* =============================================
+       ANIMATIONS
+    ============================================= */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-in-delay-4 { transition-delay: 0.4s; }
+
+    /* =============================================
+       BUTTONS
+    ============================================= */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,0.05));
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .btn:hover::before { opacity: 1; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #fff;
+      box-shadow: 0 0 30px rgba(16,185,129,.35), 0 4px 15px rgba(0,0,0,.3);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 45px rgba(16,185,129,.55), 0 6px 20px rgba(0,0,0,.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--b1);
+      color: var(--ts);
+      border: 1px solid var(--b3);
+    }
+    .btn-secondary:hover {
+      background: var(--b3);
+      color: var(--tp);
+      transform: translateY(-2px);
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+      color: #fff;
+      font-size: 1rem;
+      padding: 18px 40px;
+      border-radius: 50px;
+      box-shadow: 0 0 40px rgba(37,211,102,.4), 0 4px 20px rgba(0,0,0,.3);
+    }
+    .btn-whatsapp:hover {
+      box-shadow: 0 0 60px rgba(37,211,102,.6), 0 6px 25px rgba(0,0,0,.4);
+      transform: translateY(-3px);
+    }
+
+    /* =============================================
+       CARDS
+    ============================================= */
+    .card {
+      background: var(--s2);
+      border: 1px solid var(--b1);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      border-color: var(--b3);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    }
+    .card-accent {
+      background: linear-gradient(135deg, rgba(16,185,129,.08) 0%, rgba(59,130,246,.05) 100%);
+      border-color: rgba(16,185,129,.2);
+    }
+    .card-accent:hover {
+      border-color: rgba(16,185,129,.4);
+      box-shadow: 0 20px 60px rgba(16,185,129,.15);
+    }
+
+    /* =============================================
+       BADGES
+    ============================================= */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .badge-green {
+      background: rgba(16,185,129,.12);
+      color: var(--accent-light);
+      border: 1px solid rgba(16,185,129,.2);
+    }
+    .badge-blue {
+      background: rgba(59,130,246,.12);
+      color: #93c5fd;
+      border: 1px solid rgba(59,130,246,.2);
+    }
+    .badge-gold {
+      background: rgba(245,158,11,.12);
+      color: #fcd34d;
+      border: 1px solid rgba(245,158,11,.2);
+    }
+
+    /* =============================================
+       1. NAV
+    ============================================= */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(6,8,15,.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--b1);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    nav.scrolled {
+      background: rgba(6,8,15,.95);
+      border-color: var(--b3);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 64px;
+    }
+
+    .nav-logo {
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 1.4rem;
+      text-decoration: none;
+      letter-spacing: -0.03em;
+    }
+    .nav-logo .ts { color: var(--accent); }
+    .nav-logo .deg { color: var(--tp); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ts);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--tp); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-family: var(--font-mono) !important;
+      font-size: 0.7rem !important;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s !important;
+      box-shadow: 0 0 20px rgba(16,185,129,.3);
+    }
+    .nav-cta:hover {
+      box-shadow: 0 0 35px rgba(16,185,129,.5) !important;
+      transform: translateY(-1px);
+      color: #fff !important;
+    }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--ts);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* =============================================
+       2. HERO
+    ============================================= */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16,185,129,.08) 0%, transparent 70%);
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      background: rgba(16,185,129,.08);
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 50px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--ts);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Hero visual (stats card) */
+    .hero-visual {
+      position: relative;
+    }
+
+    .stats-card {
+      background: var(--s2);
+      border: 1px solid var(--b3);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 80px rgba(16,185,129,.06);
+    }
+    .stats-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .stats-title {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--tt);
+      margin-bottom: 28px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--font-head);
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-value.green { color: var(--accent); }
+    .stat-value.blue { color: var(--blue); }
+    .stat-value.gold { color: var(--gold); }
+    .stat-value.white { color: var(--tp); }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--tt);
+    }
+
+    .stats-card-footer {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--b1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stats-card-footer-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .stats-card-footer-text {
+      font-size: 0.85rem;
+      color: var(--ts);
+    }
+    .stats-card-footer-text strong {
+      color: var(--tp);
+      display: block;
+      font-size: 0.9rem;
+    }
+
+    /* Floating deco elements */
+    .float-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+    }
+    .float-orb-1 {
+      width: 300px;
+      height: 300px;
+      background: rgba(16,185,129,.04);
+      top: -100px;
+      right: -100px;
+    }
+    .float-orb-2 {
+      width: 200px;
+      height: 200px;
+      background: rgba(59,130,246,.04);
+      bottom: -50px;
+      left: -50px;
+    }
+
+    /* =============================================
+       3. PROBLEMA
+    ============================================= */
+    .section-problema {
+      padding: 120px 0;
+      background: var(--s1);
+      border-top: 1px solid var(--b1);
+      border-bottom: 1px solid var(--b1);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .section-header h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin-bottom: 16px;
+    }
+    .section-header p {
+      font-size: 1.05rem;
+      color: var(--ts);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .problema-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .problema-card {
+      background: var(--s2);
+      border: 1px solid var(--b1);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .problema-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ef4444, #dc2626);
+      opacity: 0.6;
+    }
+    .problema-card:hover {
+      border-color: var(--b3);
+      transform: translateY(-4px);
+    }
+
+    .problema-icon {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .problema-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      color: var(--tp);
+    }
+    .problema-card p {
+      font-size: 0.9rem;
+      color: var(--ts);
+      line-height: 1.7;
+    }
+
+    /* =============================================
+       4. FEATURES
+    ============================================= */
+    .section-features {
+      padding: 120px 0;
+      background: var(--bg);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--s2);
+      border: 1px solid var(--b1);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--blue));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feature-card:hover {
+      border-color: rgba(16,185,129,.2);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 0 40px rgba(16,185,129,.06);
+    }
+    .feature-card:hover::after { opacity: 1; }
+
+    .feature-icon {
+      font-size: 2.4rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .feature-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      color: var(--tp);
+    }
+    .feature-card p {
+      font-size: 0.92rem;
+      color: var(--ts);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .feature-list li {
+      font-size: 0.85rem;
+      color: var(--ts);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feature-list li::before {
+      content: '→';
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    /* =============================================
+       5. COMO FUNCIONA
+    ============================================= */
+    .section-como {
+      padding: 120px 0;
+      background: var(--s1);
+      border-top: 1px solid var(--b1);
+      border-bottom: 1px solid var(--b1);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+      margin-top: 64px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 36px;
+      left: 12.5%;
+      right: 12.5%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--blue));
+      z-index: 0;
+    }
+
+    .timeline-step {
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-number {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 0 auto 24px;
+      position: relative;
+      box-shadow: 0 0 30px rgba(16,185,129,.4);
+    }
+
+    .timeline-step:not(:first-child) .timeline-number {
+      background: var(--s3);
+      border: 2px solid var(--b3);
+      box-shadow: none;
+    }
+
+    .timeline-step h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: var(--tp);
+    }
+    .timeline-step p {
+      font-size: 0.85rem;
+      color: var(--ts);
+      line-height: 1.6;
+    }
+
+    .timeline-tag {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* =============================================
+       6. RESULTADOS
+    ============================================= */
+    .section-resultados {
+      padding: 120px 0;
+      background: var(--bg);
+    }
+
+    .doctoralia-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--s2);
+      border: 1px solid rgba(245,158,11,.2);
+      border-radius: var(--radius-lg);
+      padding: 20px 32px;
+      margin-bottom: 60px;
+    }
+    .doctoralia-rating {
+      font-family: var(--font-head);
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .doctoralia-info {
+      text-align: left;
+    }
+    .stars {
+      color: var(--gold);
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+      letter-spacing: 2px;
+    }
+    .doctoralia-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tt);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: var(--s2);
+      border: 1px solid var(--b1);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .testimonial-card:hover {
+      border-color: rgba(16,185,129,.2);
+      transform: translateY(-4px);
+    }
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 20px;
+      right: 28px;
+      font-family: var(--font-head);
+      font-size: 4rem;
+      color: rgba(16,185,129,.15);
+      line-height: 1;
+    }
+
+    .testimonial-stars {
+      color: var(--gold);
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-text {
+      font-size: 0.92rem;
+      color: var(--ts);
+      line-height: 1.75;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testimonial-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--blue) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .testimonial-name {
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--tp);
+    }
+    .testimonial-meta {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--tt);
+      margin-top: 2px;
+    }
+
+    .result-highlight {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(16,185,129,.1);
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 50px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 14px;
+      display: block;
+      width: fit-content;
+    }
+
+    /* =============================================
+       7. MÉDICOS
+    ============================================= */
+    .section-medicos {
+      padding: 120px 0;
+      background: var(--s1);
+      border-top: 1px solid var(--b1);
+      border-bottom: 1px solid var(--b1);
+    }
+
+    .medicos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .medico-card {
+      background: var(--s2);
+      border: 1px solid var(--b1);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .medico-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--accent), var(--blue));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .medico-card:hover {
+      border-color: rgba(16,185,129,.2);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    }
+    .medico-card:hover::before { opacity: 1; }
+
+    .medico-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--s3) 0%, var(--s2) 100%);
+      border: 2px solid rgba(16,185,129,.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin-bottom: 24px;
+    }
+
+    .medico-title {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .medico-name {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .medico-crm {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--tt);
+      margin-bottom: 20px;
+    }
+
+    .medico-bio {
+      font-size: 0.9rem;
+      color: var(--ts);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .credentials-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .credentials-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--ts);
+    }
+    .credentials-list li::before {
+      content: '▸';
+      color: var(--accent);
+      font-size: 0.75rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* =============================================
+       8. PLANOS
+    ============================================= */
+    .section-planos {
+      padding: 120px 0;
+      background: var(--bg);
+    }
+
+    .planos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .plano-card {
+      background: var(--s2);
+      border: 1px solid var(--b1);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .plano-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--blue));
+    }
+    .plano-card:hover {
+      border-color: rgba(16,185,129,.25);
+      transform: translateY(-6px);
+      box-shadow: 0 30px 80px rgba(0,0,0,.5), 0 0 60px rgba(16,185,129,.08);
+    }
+
+    .plano-card.featured {
+      background: linear-gradient(135deg, rgba(16,185,129,.06) 0%, rgba(59,130,246,.04) 100%);
+      border-color: rgba(16,185,129,.25);
+      box-shadow: 0 0 60px rgba(16,185,129,.1);
+    }
+
+    .plano-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 5px 14px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #fff;
+      border-radius: 50px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .plano-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--tt);
+      margin-bottom: 8px;
+    }
+
+    .plano-name {
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .plano-dosagem {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      display: block;
+    }
+
+    .plano-price-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tt);
+      margin-bottom: 4px;
+    }
+
+    .plano-price {
+      font-family: var(--font-head);
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--tp);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .plano-price-sub {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--tt);
+      margin-bottom: 28px;
+    }
+
+    .plano-divider {
+      height: 1px;
+      background: var(--b1);
+      margin: 28px 0;
+    }
+
+    .plano-includes {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .plano-includes li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--ts);
+    }
+    .plano-includes li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+
+    /* =============================================
+       9. FAQ
+    ============================================= */
+    .section-faq {
+      padding: 120px 0;
+      background: var(--s1);
+      border-top: 1px solid var(--b1);
+      border-bottom: 1px solid var(--b1);
+    }
+
+    .faq-list {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .faq-item {
+      background: var(--s2);
+      border: 1px solid var(--b1);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .faq-item.open { border-color: rgba(16,185,129,.2); }
+
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 24px 28px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--tp);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.4;
+      transition: background 0.2s;
+    }
+    .faq-question:hover { background: var(--b1); }
+
+    .faq-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--b3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.2rem;
+      color: var(--accent);
+      transition: transform 0.3s, background 0.3s;
+    }
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+      background: rgba(16,185,129,.1);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+    }
+    .faq-answer.open {
+      max-height: 400px;
+    }
+    .faq-answer-inner {
+      padding: 0 28px 24px;
+      font-size: 0.9rem;
+      color: var(--ts);
+      line-height: 1.75;
+    }
+
+    /* =============================================
+       10. CTA FINAL
+    ============================================= */
+    .section-cta-final {
+      padding: 120px 0;
+      background: var(--bg);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-cta-final::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(16,185,129,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-final-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-urgency {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.2);
+      border-radius: 50px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+    }
+    .cta-urgency::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    .section-cta-final h2 {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      margin-bottom: 20px;
+    }
+
+    .section-cta-final p {
+      font-size: 1.1rem;
+      color: var(--ts);
+      max-width: 520px;
+      margin: 0 auto 48px;
+    }
+
+    .cta-address {
+      margin-top: 48px;
+      padding: 20px;
+      background: var(--b1);
+      border: 1px solid var(--b1);
+      border-radius: var(--radius);
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.88rem;
+      color: var(--ts);
+    }
+    .cta-address span { color: var(--tp); font-weight: 500; }
+
+    /* =============================================
+       11. FOOTER
+    ============================================= */
+    footer {
+      background: var(--s1);
+      border-top: 1px solid var(--b1);
+      padding: 48px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .footer-logo {
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.03em;
+      text-decoration: none;
+    }
+    .footer-logo .ts { color: var(--accent); }
+    .footer-logo .deg { color: var(--tp); }
+
+    .footer-info {
+      text-align: center;
+    }
+    .footer-handle {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .footer-address {
+      font-size: 0.8rem;
+      color: var(--tt);
+    }
+
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--tt);
+      text-align: right;
+    }
+
+    /* =============================================
+       RESPONSIVE — 768px
+    ============================================= */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(6,8,15,.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid var(--b1);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { font-size: 0.9rem; }
+      .nav-toggle { display: flex; }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        text-align: center;
+      }
+      .hero-eyebrow { justify-content: center; }
+      .hero-subtitle { margin: 0 auto 36px; }
+      .hero-ctas { justify-content: center; }
+      .hero-badges { justify-content: center; }
+
+      .problema-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .timeline {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .timeline::before { display: none; }
+
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .medicos-grid { grid-template-columns: 1fr; }
+      .planos-grid { grid-template-columns: 1fr; }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-copy { text-align: center; }
+
+      .doctoralia-badge {
+        flex-direction: column;
+        text-align: center;
+      }
+      .doctoralia-info { text-align: center; }
+    }
+
+    /* =============================================
+       RESPONSIVE — 480px
+    ============================================= */
+    @media (max-width: 480px) {
+      .container { padding: 0 16px; }
+
+      .hero { padding: 100px 0 60px; }
+      .hero h1 { font-size: 2.2rem; }
+      .hero-ctas { flex-direction: column; }
+      .hero-ctas .btn { width: 100%; justify-content: center; }
+
+      .btn { padding: 12px 22px; font-size: 0.72rem; }
+      .btn-whatsapp { padding: 16px 28px; font-size: 0.9rem; }
+
+      section { padding: 80px 0 !important; }
+      .section-header h2 { font-size: 1.8rem; }
+
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .stat-value { font-size: 1.8rem; }
+
+      .feature-card { padding: 28px 22px; }
+      .plano-card { padding: 28px 22px; }
+      .medico-card { padding: 28px 22px; }
+      .card { padding: 24px; }
+
+      .plano-price { font-size: 2.4rem; }
+    }
+
+    /* Utility */
+    .text-center { text-align: center; }
+    .mt-4 { margin-top: 16px; }
+    .mt-8 { margin-top: 32px; }
+    .mb-0 { margin-bottom: 0; }
+    .w-full { width: 100%; }
+    .justify-center { justify-content: center; }
+    .flex { display: flex; }
+    .gap-3 { gap: 12px; }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       1. NAV
+  ============================================= -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">
+        <span class="ts">TS</span><span class="deg">360°</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#programa">O Programa</a></li>
+        <li><a href="#resultados">Resultados</a></li>
+        <li><a href="#medicos">Médicos</a></li>
+        <li><a href="#planos">Planos</a></li>
+        <li><a href="#planos" class="nav-cta">Quero minha vaga</a></li>
+      </ul>
+
+      <div class="nav-toggle" id="navToggle" onclick="toggleNav()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================
+       2. HERO
+  ============================================= -->
+  <section class="hero" id="hero">
+    <div class="float-orb float-orb-1"></div>
+    <div class="float-orb float-orb-2"></div>
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="hero-eyebrow fade-in">Programa Médico de Emagrecimento</div>
+
+          <h1 class="fade-in fade-in-delay-1">
+            Perca peso com<br>acompanhamento<br>
+            <em class="gradient-text" style="font-style:normal;">médico real</em>
+          </h1>
+
+          <p class="hero-subtitle fade-in fade-in-delay-2">
+            O TS 360° combina Tirzepatida com supervisão médica, nutrição personalizada e protocolo de treino — tudo sob controle de especialistas em esporte. Resultados médios de 8–15kg no período.
+          </p>
+
+          <div class="hero-ctas fade-in fade-in-delay-3">
+            <a href="#planos" class="btn btn-primary">Quero minha vaga →</a>
+            <a href="#como-funciona" class="btn btn-secondary">Como funciona</a>
+          </div>
+
+          <div class="hero-badges fade-in fade-in-delay-4">
+            <span class="badge badge-green">✓ Supervisão Médica</span>
+            <span class="badge badge-blue">✓ Protocolo Personalizado</span>
+            <span class="badge badge-gold">✓ Resultados em 90 dias</span>
+          </div>
+        </div>
+
+        <div class="hero-visual fade-in fade-in-delay-2">
+          <div class="stats-card">
+            <div class="stats-title">// resultados_ts360.stats</div>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value green" id="stat-kg">0</div>
+                <div class="stat-label">kg perdidos</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value gold">4.9★</div>
+                <div class="stat-label">Doctoralia</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value blue" id="stat-meses">0</div>
+                <div class="stat-label">meses de acomp.</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value white">R$3.499</div>
+                <div class="stat-label">plano completo</div>
+              </div>
+            </div>
+            <div class="stats-card-footer">
+              <div class="stats-card-footer-icon">🩺</div>
+              <div class="stats-card-footer-text">
+                <strong>TS Health Center</strong>
+                Meireles, Fortaleza — CE
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       3. PROBLEMA
+  ============================================= -->
+  <section class="section-problema" id="problema">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">O problema</div>
+        <h2>Por que a maioria das<br>dietas <span class="gradient-text">fracassa</span></h2>
+        <p>A indústria de emagrecimento vende soluções genéricas para corpos únicos. O resultado é sempre o mesmo: efeito sanfona, frustração e saúde comprometida.</p>
+      </div>
+
+      <div class="problema-grid">
+        <div class="problema-card fade-in fade-in-delay-1">
+          <span class="problema-icon">⚠️</span>
+          <h3>Sem supervisão médica</h3>
+          <p>Protocolos de emagrecimento sem acompanhamento médico são perigosos. Sem exames, sem avaliação clínica, sem controle de efeitos colaterais — o risco é real e os resultados, temporários.</p>
+        </div>
+        <div class="problema-card fade-in fade-in-delay-2">
+          <span class="problema-icon">📋</span>
+          <h3>Solução única para todos</h3>
+          <p>Dietas genéricas e planilhas de treino copiadas ignoram que cada metabolismo é diferente. O que funciona para um pode ser prejudicial para outro. Personalização não é luxo — é necessidade.</p>
+        </div>
+        <div class="problema-card fade-in fade-in-delay-3">
+          <span class="problema-icon">🔄</span>
+          <h3>Sem recovery e manutenção</h3>
+          <p>Programas que param no resultado não existem de verdade. Sem protocolo de manutenção e acompanhamento contínuo, o peso retorna — com juros. Recovery é parte do resultado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       4. FEATURES TS 360°
+  ============================================= -->
+  <section class="section-features" id="programa">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">TS 360°</div>
+        <h2>Cuidado completo.<br>Do primeiro dia ao <span class="gradient-text">resultado.</span></h2>
+        <p>Quatro pilares integrados, todos sob supervisão médica especializada em medicina do esporte.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card fade-in fade-in-delay-1">
+          <span class="feature-icon">🩺</span>
+          <h3>Medicina</h3>
+          <p>Avaliação clínica completa, solicitação de exames, prescrição médica de Tirzepatida e acompanhamento mensal. Cada protocolo é único — ajustado ao seu histórico, objetivos e resposta ao tratamento.</p>
+          <ul class="feature-list">
+            <li>Consulta de avaliação inicial completa</li>
+            <li>Solicitação e interpretação de exames</li>
+            <li>Prescrição e ajuste da Tirzepatida</li>
+            <li>Acompanhamento mensal presencial</li>
+            <li>Acesso a Dr. César Cima e Dr. Abaeté Neto</li>
+          </ul>
+        </div>
+
+        <div class="feature-card fade-in fade-in-delay-2">
+          <span class="feature-icon">🥗</span>
+          <h3>Nutrição</h3>
+          <p>Consulta com nutricionista especializada para montar um plano alimentar que funciona junto ao protocolo medicamentoso — sem sofrimento, com estratégia.</p>
+          <ul class="feature-list">
+            <li>Consulta com nutricionista incluída</li>
+            <li>Plano alimentar personalizado</li>
+            <li>Orientações para o período de tratamento</li>
+            <li>Estratégias para manutenção do resultado</li>
+          </ul>
+        </div>
+
+        <div class="feature-card fade-in fade-in-delay-3">
+          <span class="feature-icon">💪</span>
+          <h3>Treino</h3>
+          <p>Com Dr. Abaeté Neto — Médico do Esporte e Radiologista Osteoarticular — você recebe orientação de atividade física alinhada ao seu estado de saúde e ao protocolo de emagrecimento.</p>
+          <ul class="feature-list">
+            <li>Avaliação musculoesquelética</li>
+            <li>Orientação de atividade física personalizada</li>
+            <li>Integração treino + protocolo medicamentoso</li>
+            <li>Prevenção de lesões durante o processo</li>
+          </ul>
+        </div>
+
+        <div class="feature-card fade-in fade-in-delay-4">
+          <span class="feature-icon">🔄</span>
+          <h3>Recovery</h3>
+          <p>Não termina no resultado. Após o período principal, você recebe um protocolo de manutenção para que o peso conquistado se torne permanente — não mais uma fase.</p>
+          <ul class="feature-list">
+            <li>Protocolo pós-tratamento estruturado</li>
+            <li>Estratégia de manutenção do peso</li>
+            <li>Acompanhamento de longo prazo</li>
+            <li>Suporte para reajuste se necessário</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       5. COMO FUNCIONA
+  ============================================= -->
+  <section class="section-como" id="como-funciona">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">Processo</div>
+        <h2>Como o TS 360°<br><span class="gradient-text">funciona</span></h2>
+        <p>Quatro etapas estruturadas. Um processo claro. Do primeiro contato ao resultado.</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-step fade-in fade-in-delay-1">
+          <div class="timeline-number">1</div>
+          <span class="timeline-tag">Semana 1</span>
+          <h3>Avaliação Inicial</h3>
+          <p>Consulta médica completa, histórico clínico, exames laboratoriais e definição do protocolo personalizado com Tirzepatida.</p>
+        </div>
+
+        <div class="timeline-step fade-in fade-in-delay-2">
+          <div class="timeline-number">2</div>
+          <span class="timeline-tag">Semana 2</span>
+          <h3>Protocolo Personalizado</h3>
+          <p>Início da Tirzepatida, consulta com nutricionista, orientação de treino e plano integrado de 3 ou 6 meses.</p>
+        </div>
+
+        <div class="timeline-step fade-in fade-in-delay-3">
+          <div class="timeline-number">3</div>
+          <span class="timeline-tag">Mensal</span>
+          <h3>Acompanhamento</h3>
+          <p>Consultas mensais para ajuste de dosagem, avaliação de resultados, monitoramento de exames e suporte contínuo.</p>
+        </div>
+
+        <div class="timeline-step fade-in fade-in-delay-4">
+          <div class="timeline-number">4</div>
+          <span class="timeline-tag">Resultado</span>
+          <h3>Resultado + Manutenção</h3>
+          <p>8–15kg perdidos com saúde. Protocolo de manutenção para consolidar o resultado e evitar o reganho.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       6. RESULTADOS
+  ============================================= -->
+  <section class="section-resultados" id="resultados">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">Resultados</div>
+        <h2>Pacientes reais.<br>Resultados <span class="gradient-text">reais.</span></h2>
+        <p>Avaliado e acompanhado pelos melhores médicos de medicina do esporte de Fortaleza.</p>
+      </div>
+
+      <div class="text-center fade-in">
+        <div class="doctoralia-badge" style="display:inline-flex;">
+          <div class="doctoralia-rating">4.9</div>
+          <div class="doctoralia-info">
+            <div class="stars">★★★★★</div>
+            <div style="font-weight:600; font-size:.95rem; margin-bottom:4px;">Nota Doctoralia</div>
+            <div class="doctoralia-label">Avaliação verificada de pacientes</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card fade-in fade-in-delay-1">
+          <div class="testimonial-stars">★★★★★</div>
+          <div class="result-highlight">✓ −12kg em 5 meses</div>
+          <p class="testimonial-text">
+            "Tentei emagrecer por anos. Dietas, academia, tudo. Nada durava mais de 3 meses. Com o TS 360° foi diferente — o suporte médico real mudou tudo. Me sinto segura em cada etapa e os resultados foram além do que esperava."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">👩</div>
+            <div>
+              <div class="testimonial-name">Paciente, 38 anos</div>
+              <div class="testimonial-meta">Fortaleza, CE — Plano 5mg</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card fade-in fade-in-delay-2">
+          <div class="testimonial-stars">★★★★★</div>
+          <div class="result-highlight">✓ −9kg em 3 meses</div>
+          <p class="testimonial-text">
+            "O que me convenceu foi a seriedade. Não é uma clínica de estética vendendo milagre — é medicina de verdade. O Dr. César é meticuloso, explica tudo, e o acompanhamento mensal me dá segurança pra continuar."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">👨</div>
+            <div>
+              <div class="testimonial-name">Paciente, 45 anos</div>
+              <div class="testimonial-meta">Fortaleza, CE — Plano 2,5mg</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card fade-in fade-in-delay-3">
+          <div class="testimonial-stars">★★★★★</div>
+          <div class="result-highlight">✓ −14kg em 6 meses</div>
+          <p class="testimonial-text">
+            "Com 52 anos, achei que emagrecer seria ainda mais difícil. O protocolo foi adaptado para minha realidade, os médicos foram muito atentos. Resultado foi acima do esperado e me sinto mais saudável do que aos 40."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">👩</div>
+            <div>
+              <div class="testimonial-name">Paciente, 52 anos</div>
+              <div class="testimonial-meta">Fortaleza, CE — Plano 5mg</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       7. MÉDICOS
+  ============================================= -->
+  <section class="section-medicos" id="medicos">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">Equipe Médica</div>
+        <h2>Especialistas em<br><span class="gradient-text">medicina do esporte</span></h2>
+        <p>O TS 360° é conduzido por médicos com formação de excelência — especializados em metabolismo, esporte e saúde de alta performance.</p>
+      </div>
+
+      <div class="medicos-grid">
+        <div class="medico-card fade-in fade-in-delay-1">
+          <div class="medico-avatar">🩺</div>
+          <div class="medico-title">Founder — TS Health Center</div>
+          <div class="medico-name">Dr. César Cima</div>
+          <div class="medico-crm">CRM 8430 · CE</div>
+          <p class="medico-bio">
+            Fundador da TS Health Center, Dr. César Cima combina expertise em Traumatologia do Esporte com uma visão holística de saúde e performance. Sua formação de alto nível — incluindo especialização no CETE/USP-UNIFESP — garante um protocolo de emagrecimento seguro, eficaz e baseado em evidências.
+          </p>
+          <ul class="credentials-list">
+            <li>Especialização em Traumatologia do Esporte — CETE/USP-UNIFESP</li>
+            <li>Fundador da TS Health Center, Meireles-CE</li>
+            <li>Especialista em protocolos de emagrecimento com GLP-1</li>
+            <li>Experiência em medicina de alta performance</li>
+            <li>Foco em resultados duradouros com segurança clínica</li>
+          </ul>
+        </div>
+
+        <div class="medico-card fade-in fade-in-delay-2">
+          <div class="medico-avatar">🏃</div>
+          <div class="medico-title">Médico do Esporte</div>
+          <div class="medico-name">Dr. Abaeté Neto</div>
+          <div class="medico-crm">Médico do Esporte · Radiologista Osteoarticular</div>
+          <p class="medico-bio">
+            Dr. Abaeté Neto traz uma perspectiva única ao TS 360°: a interseção entre medicina do esporte e radiologia osteoarticular. Com isso, cada paciente recebe não apenas o protocolo de emagrecimento, mas também orientação de treino personalizada e avaliação musculoesquelética para maximizar resultados com segurança.
+          </p>
+          <ul class="credentials-list">
+            <li>Médico do Esporte — especialização em performance e recuperação</li>
+            <li>Radiologista Osteoarticular — avaliação estrutural completa</li>
+            <li>Orientação de atividade física integrada ao protocolo</li>
+            <li>Prevenção e tratamento de lesões durante o processo</li>
+            <li>Avaliação funcional e composição corporal</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       8. PLANOS
+  ============================================= -->
+  <section class="section-planos" id="planos">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">Investimento</div>
+        <h2>Escolha seu<br><span class="gradient-text">protocolo</span></h2>
+        <p>Dois planos. Mesmo valor. A diferença está na dosagem e na duração — ambos incluem acompanhamento médico completo.</p>
+      </div>
+
+      <div class="planos-grid">
+        <div class="plano-card fade-in fade-in-delay-1">
+          <div class="plano-eyebrow">Plano Essencial</div>
+          <div class="plano-name">Tirzepatida 2,5mg</div>
+          <span class="plano-dosagem">6 meses de acompanhamento</span>
+
+          <div class="plano-price-label">Investimento total</div>
+          <div class="plano-price">R$3.499</div>
+          <div class="plano-price-sub">pagamento único · sem mensalidade adicional</div>
+
+          <div class="plano-divider"></div>
+
+          <ul class="plano-includes">
+            <li>Avaliação médica inicial completa</li>
+            <li>Solicitação e análise de exames</li>
+            <li>Protocolo Tirzepatida 2,5mg (6 meses)</li>
+            <li>Consulta com nutricionista</li>
+            <li>Acompanhamento mensal (6 consultas)</li>
+            <li>Orientação de treino — Dr. Abaeté</li>
+            <li>Protocolo de manutenção pós-tratamento</li>
+            <li>Resultado médio: 8–12kg</li>
+          </ul>
+
+          <a href="https://wa.me/5585000000000?text=Olá!%20Tenho%20interesse%20no%20TS%20360°%20Plano%20Essencial%202%2C5mg." class="btn btn-secondary w-full" style="justify-content:center; width:100%;">
+            Garantir vaga — Essencial
+          </a>
+        </div>
+
+        <div class="plano-card featured fade-in fade-in-delay-2">
+          <div class="plano-badge">Mais Escolhido</div>
+          <div class="plano-eyebrow">Plano Acelerado</div>
+          <div class="plano-name">Tirzepatida 5mg</div>
+          <span class="plano-dosagem">3 meses de acompanhamento</span>
+
+          <div class="plano-price-label">Investimento total</div>
+          <div class="plano-price">R$3.499</div>
+          <div class="plano-price-sub">pagamento único · mesmo valor, resultado acelerado</div>
+
+          <div class="plano-divider"></div>
+
+          <ul class="plano-includes">
+            <li>Avaliação médica inicial completa</li>
+            <li>Solicitação e análise de exames</li>
+            <li>Protocolo Tirzepatida 5mg (3 meses)</li>
+            <li>Consulta com nutricionista</li>
+            <li>Acompanhamento mensal (3 consultas)</li>
+            <li>Orientação de treino — Dr. Abaeté</li>
+            <li>Protocolo de manutenção pós-tratamento</li>
+            <li>Resultado médio: 10–15kg</li>
+          </ul>
+
+          <a href="https://wa.me/5585000000000?text=Olá!%20Tenho%20interesse%20no%20TS%20360°%20Plano%20Acelerado%205mg." class="btn btn-primary w-full" style="justify-content:center; width:100%;">
+            Garantir vaga — Acelerado →
+          </a>
+        </div>
+      </div>
+
+      <div class="text-center mt-8 fade-in">
+        <p style="font-size:.85rem; color:var(--tt); font-family:var(--font-mono); letter-spacing:.08em;">
+          ✦ Valores sujeitos à disponibilidade de vagas · Planos individuais, não incluem medicamento avulso
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       9. FAQ
+  ============================================= -->
+  <section class="section-faq" id="faq">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="eyebrow">Dúvidas</div>
+        <h2>Perguntas<br><span class="gradient-text">frequentes</span></h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item fade-in fade-in-delay-1">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>O que é a Tirzepatida e como ela funciona para emagrecer?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              A Tirzepatida é um medicamento da classe GIP/GLP-1 — um agonista duplo aprovado por agências regulatórias internacionais para tratamento de obesidade e diabetes tipo 2. Ela age reduzindo o apetite, aumentando a saciedade e melhorando o metabolismo da glicose. No programa TS 360°, ela é prescrita por médico e ajustada mensalmente conforme sua resposta. É um dos avanços mais significativos em medicina do emagrecimento da última década.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in fade-in-delay-1">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Quem pode participar do TS 360°?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              O programa é indicado para adultos com sobrepeso ou obesidade (IMC ≥ 27 com comorbidade, ou ≥ 30 sem), que não obtiveram resultados satisfatórios com dieta e exercício isolados. A elegibilidade é avaliada na consulta inicial — são realizados exames e anamnese completa para garantir que o protocolo é seguro e indicado para o seu caso. Contraindicações incluem gravidez, histórico de pancreatite e alguns tipos de câncer da tireoide.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in fade-in-delay-2">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Quais são os possíveis efeitos colaterais?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Os efeitos colaterais mais comuns são gastrointestinais: náusea, vômito, diarreia e constipação — especialmente no início do tratamento, quando a dose é mais baixa. A maioria dos pacientes se adapta nas primeiras semanas. Por isso o protocolo começa com doses menores e sobe gradualmente. O acompanhamento mensal permite ajustar a dosagem conforme sua tolerância. Efeitos colaterais graves são raros e são monitorados de perto pela equipe médica.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in fade-in-delay-3">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Preciso fazer exames antes de começar?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Sim. Na consulta inicial, o médico solicitará um painel de exames laboratoriais para avaliar sua saúde metabólica, função renal, hepática, tireoidiana e glicemia, entre outros. Esses exames são fundamentais para personalizar o protocolo e garantir que a Tirzepatida seja segura para você. A solicitação dos exames está incluída no plano — o que não está incluído é o custo dos exames no laboratório.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in fade-in-delay-4">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>O resultado dura após terminar o tratamento?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              O TS 360° inclui um protocolo de manutenção justamente para garantir durabilidade. A Tirzepatida é eficaz para o período de emagrecimento, mas o resultado de longo prazo depende de uma combinação: hábitos alimentares reeducados (pela nutricionista), atividade física incorporada à rotina e, em alguns casos, estratégias de manutenção farmacológica. O objetivo do programa não é a perda de peso pontual — é uma mudança metabólica e comportamental real. Resultados sustentados são possíveis com o protocolo completo.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       10. CTA FINAL
+  ============================================= -->
+  <section class="section-cta-final" id="cta-final">
+    <div class="container">
+      <div class="cta-final-inner">
+        <div class="cta-urgency fade-in">Vagas limitadas por período</div>
+
+        <h2 class="fade-in fade-in-delay-1">
+          Vagas limitadas.<br>
+          <span class="gradient-text">Comece esta semana.</span>
+        </h2>
+
+        <p class="fade-in fade-in-delay-2">
+          O TS 360° trabalha com número limitado de pacientes por mês — para garantir a qualidade do acompanhamento. Reserve sua avaliação inicial agora.
+        </p>
+
+        <div class="fade-in fade-in-delay-3">
+          <a href="https://wa.me/5585000000000?text=Olá!%20Tenho%20interesse%20no%20TS%20360°.%20Gostaria%20de%20agendar%20minha%20avaliação%20inicial." class="btn btn-whatsapp" style="font-family:var(--font-mono); letter-spacing:.08em; text-transform:uppercase;">
+            📱 Falar no WhatsApp — Quero minha vaga
+          </a>
+        </div>
+
+        <div class="fade-in fade-in-delay-4">
+          <div class="cta-address">
+            📍 <span>TS Health Center</span> — Rua Professor Dias da Rocha, 409 · Salas 6, 7 e 8 · Meireles, Fortaleza-CE
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       11. FOOTER
+  ============================================= -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <a href="#hero" class="footer-logo">
+          <span class="ts">TS</span><span class="deg">360°</span>
+        </a>
+
+        <div class="footer-info">
+          <div class="footer-handle">@tshealthcenter</div>
+          <div class="footer-address">
+            Rua Professor Dias da Rocha, 409 · Salas 6, 7 e 8 · Meireles, Fortaleza-CE
+          </div>
+        </div>
+
+        <div class="footer-copy">
+          © 2026 TS Health Center<br>
+          Todos os direitos reservados
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+    // --- Nav scroll ---
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // --- Mobile nav toggle ---
+    function toggleNav() {
+      const links = document.getElementById('navLinks');
+      links.classList.toggle('open');
+    }
+    // Close nav when link clicked
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
+
+    // --- IntersectionObserver fade-in ---
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // --- Counter animation for hero stats ---
+    function animateCounter(el, target, suffix, duration) {
+      let start = 0;
+      const step = target / (duration / 16);
+      const timer = setInterval(() => {
+        start += step;
+        if (start >= target) {
+          el.textContent = target + suffix;
+          clearInterval(timer);
+        } else {
+          el.textContent = Math.floor(start) + suffix;
+        }
+      }, 16);
+    }
+
+    const heroObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setTimeout(() => animateCounter(document.getElementById('stat-kg'), 15, 'kg', 1200), 400);
+          setTimeout(() => animateCounter(document.getElementById('stat-meses'), 6, 'M', 800), 600);
+          heroObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const statsCard = document.querySelector('.stats-card');
+    if (statsCard) heroObserver.observe(statsCard);
+
+    // --- FAQ accordion ---
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const answer = item.querySelector('.faq-answer');
+      const isOpen = item.classList.contains('open');
+
+      // Close all
+      document.querySelectorAll('.faq-item.open').forEach(openItem => {
+        openItem.classList.remove('open');
+        openItem.querySelector('.faq-answer').classList.remove('open');
+      });
+
+      // Open clicked if it wasn't open
+      if (!isOpen) {
+        item.classList.add('open');
+        answer.classList.add('open');
+      }
+    }
+
+    // --- Smooth scroll for nav links (polyfill support) ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          const offset = 72; // nav height
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
