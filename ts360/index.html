@@ -366,8 +366,9 @@
     .hero-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 80px;
+      gap: 48px;
       align-items: center;
+      overflow: visible;
     }
 
     .hero-eyebrow {
@@ -429,16 +430,20 @@
     /* Hero visual (stats card) */
     .hero-visual {
       position: relative;
+      min-width: 0;
+      overflow: hidden;
     }
 
     .stats-card {
       background: var(--s2);
       border: 1px solid var(--b3);
       border-radius: var(--radius-lg);
-      padding: 36px;
+      padding: 28px;
       position: relative;
       overflow: hidden;
       box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 80px rgba(16,185,129,.06);
+      width: 100%;
+      box-sizing: border-box;
     }
     .stats-card::before {
       content: '';
@@ -521,24 +526,27 @@
 
     /* Floating deco elements */
     .float-orb {
-      position: absolute;
+      position: fixed;
       border-radius: 50%;
-      filter: blur(60px);
+      filter: blur(80px);
       pointer-events: none;
+      z-index: 0;
     }
     .float-orb-1 {
-      width: 300px;
-      height: 300px;
-      background: rgba(16,185,129,.04);
-      top: -100px;
-      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: rgba(16,185,129,.03);
+      top: 10%;
+      right: 0;
+      overflow: hidden;
     }
     .float-orb-2 {
-      width: 200px;
-      height: 200px;
-      background: rgba(59,130,246,.04);
-      bottom: -50px;
-      left: -50px;
+      width: 300px;
+      height: 300px;
+      background: rgba(59,130,246,.03);
+      top: 50%;
+      left: 0;
+      overflow: hidden;
     }
 
     /* =============================================
@@ -1748,7 +1756,7 @@
   <section class="hero" id="hero">
     <div class="float-orb float-orb-1"></div>
     <div class="float-orb float-orb-2"></div>
-    <div class="container">
+    <div class="container" style="overflow:hidden;">
       <div class="hero-inner">
         <div class="hero-content">
           <div class="hero-eyebrow fade-in">Programa Médico de Emagrecimento</div>
@@ -1779,8 +1787,8 @@
             <div class="stats-title">// resultados_ts360.stats</div>
             <div class="stats-grid">
               <div class="stat-item">
-                <div class="stat-value green" id="stat-kg">8–15</div>
-                <div class="stat-label">kg perdidos</div>
+                <div class="stat-value green" id="stat-kg" style="font-size:1.8rem;line-height:1.1;">8–15kg</div>
+                <div class="stat-label">perdidos</div>
               </div>
               <div class="stat-item">
                 <div class="stat-value gold">4.9★</div>
@@ -1788,7 +1796,7 @@
               </div>
               <div class="stat-item">
                 <div class="stat-value blue" id="stat-meses">0</div>
-                <div class="stat-label">meses de acomp.</div>
+                <div class="stat-label">acompanhamento</div>
               </div>
               <div class="stat-item">
                 <div class="stat-value white">Sob consulta</div>
