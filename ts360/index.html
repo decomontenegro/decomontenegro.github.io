@@ -365,9 +365,14 @@
 
     .hero-inner {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 80px;
       align-items: center;
+    }
+
+    .hero-visual {
+      min-width: 0;
+      overflow: hidden;
     }
 
     .hero-eyebrow {
