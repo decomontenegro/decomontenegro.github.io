@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lobo — Seu negócio, na velocidade certa</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    color: #f0ede8;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    width: 1280px;
+    height: 720px;
+    position: relative;
+  }
+
+  /* SCENES */
+  .scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    padding: 60px;
+  }
+  .scene.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* PROGRESS BAR */
+  #progress {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: #f5c842;
+    transition: width 0.3s linear;
+    z-index: 100;
+  }
+
+  /* SCENE COUNTER */
+  #counter {
+    position: fixed;
+    bottom: 18px;
+    right: 28px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 2px;
+    z-index: 100;
+  }
+
+  /* SKIP */
+  #skip {
+    position: fixed;
+    bottom: 12px;
+    left: 28px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+    cursor: pointer;
+    letter-spacing: 1px;
+    z-index: 100;
+    transition: color 0.2s;
+  }
+  #skip:hover { color: rgba(255,255,255,0.5); }
+
+  /* ─── SCENE 1: Hook — mensagens sem resposta ─── */
+  #s1 .messages {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 560px;
+  }
+  .msg {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 18px 18px 18px 4px;
+    padding: 14px 22px;
+    font-size: 18px;
+    color: #d0ccc4;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    max-width: 420px;
+  }
+  .msg.visible { opacity: 1; transform: translateX(0); }
+  .msg-meta {
+    font-size: 11px;
+    color: #444;
+    margin-top: 4px;
+    margin-left: 4px;
+  }
+  #s1 .silence {
+    margin-top: 32px;
+    font-size: 13px;
+    color: #444;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  #s1 .silence.visible { opacity: 1; }
+
+  /* ─── SCENE 2: Problema — sistemas desconectados ─── */
+  #s2 .headline {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 48px;
+    line-height: 1.2;
+  }
+  #s2 .headline span { color: #f5c842; }
+  .systems-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 700px;
+  }
+  .sys-card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 20px 16px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .sys-card.visible { opacity: 1; transform: translateY(0); }
+  .sys-card .icon { font-size: 28px; margin-bottom: 8px; }
+  .sys-card .label { font-size: 12px; color: #666; letter-spacing: 1px; }
+  .sys-card.disconnected { border-color: #2a1a1a; }
+  .sys-card.disconnected .icon { filter: grayscale(0.7); opacity: 0.5; }
+  #s2 .sub {
+    margin-top: 36px;
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.4s;
+  }
+  #s2 .sub.visible { opacity: 1; }
+
+  /* ─── SCENE 3: Solução — Lobo conecta tudo ─── */
+  #s3 .wolf-logo {
+    font-size: 72px;
+    margin-bottom: 8px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  #s3 .wolf-logo.visible { opacity: 1; transform: scale(1); }
+  #s3 .wolf-name {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.2s;
+  }
+  #s3 .wolf-name.visible { opacity: 1; }
+  #s3 .wolf-tagline {
+    font-size: 16px;
+    color: #666;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 52px;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.4s;
+  }
+  #s3 .wolf-tagline.visible { opacity: 1; }
+  .connect-grid {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: relative;
+  }
+  .conn-systems {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .conn-chip {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 13px;
+    color: #888;
+    opacity: 0;
+    transition: opacity 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+  .conn-chip.lit {
+    opacity: 1;
+    border-color: #f5c842;
+    color: #f0ede8;
+  }
+  .conn-line {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, #2a2a2a, #f5c842);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    margin: 0 8px;
+  }
+  .conn-line.visible { opacity: 1; }
+  .wolf-center {
+    background: #f5c842;
+    color: #0a0a0a;
+    font-size: 32px;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    margin: 0 8px;
+  }
+  .wolf-center.visible { opacity: 1; transform: scale(1); }
+  #s3 .insight {
+    margin-top: 36px;
+    font-size: 18px;
+    color: #888;
+    text-align: center;
+    max-width: 560px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  #s3 .insight.visible { opacity: 1; }
+  #s3 .insight em { color: #f0ede8; font-style: normal; }
+
+  /* ─── SCENE 4: 3 Pilares ─── */
+  #s4 .section-label {
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: #f5c842;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  #s4 .section-label.visible { opacity: 1; }
+  #s4 .headline {
+    font-size: 40px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 56px;
+    opacity: 0;
+    transition: opacity 0.4s ease 0.1s;
+  }
+  #s4 .headline.visible { opacity: 1; }
+  .pillars {
+    display: flex;
+    gap: 32px;
+  }
+  .pillar {
+    flex: 1;
+    background: #111;
+    border: 1px solid #1e1e1e;
+    border-radius: 20px;
+    padding: 36px 28px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .pillar.visible { opacity: 1; transform: translateY(0); }
+  .pillar .p-icon { font-size: 36px; margin-bottom: 16px; }
+  .pillar .p-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #f0ede8;
+  }
+  .pillar .p-title span { color: #f5c842; }
+  .pillar .p-desc { font-size: 14px; color: #666; line-height: 1.6; }
+  .pillar:hover { border-color: #f5c842; transition: border-color 0.2s; }
+
+  /* ─── SCENE 5: Resultado — respostas ─── */
+  #s5 .headline {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  #s5 .sub {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 44px;
+    text-align: center;
+  }
+  .qa-pair {
+    width: 700px;
+    margin-bottom: 24px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .qa-pair.visible { opacity: 1; }
+  .q-msg {
+    background: #161616;
+    border: 1px solid #252525;
+    border-radius: 18px 18px 18px 4px;
+    padding: 12px 20px;
+    font-size: 15px;
+    color: #888;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+  .a-msg {
+    background: #1a1f0e;
+    border: 1px solid #2d3a16;
+    border-radius: 18px 18px 4px 18px;
+    padding: 12px 20px;
+    font-size: 15px;
+    color: #a8d060;
+    display: inline-block;
+    float: right;
+    clear: both;
+  }
+  .a-prefix {
+    font-size: 11px;
+    color: #f5c842;
+    font-weight: 600;
+    margin-right: 6px;
+    letter-spacing: 1px;
+  }
+  #s5 .result-stat {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  #s5 .result-stat.visible { opacity: 1; }
+  #s5 .result-stat strong { color: #f0ede8; }
+
+  /* ─── SCENE 6: Diferencial ─── */
+  #s6 .not-a {
+    font-size: 16px;
+    color: #444;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  #s6 .not-a.visible { opacity: 1; }
+  #s6 .is-a {
+    font-size: 52px;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.1;
+    margin-bottom: 48px;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.2s;
+  }
+  #s6 .is-a.visible { opacity: 1; }
+  #s6 .is-a span { color: #f5c842; }
+  .vs-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 12px;
+    width: 700px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .vs-row.visible { opacity: 1; }
+  .vs-no {
+    flex: 1;
+    background: #120a0a;
+    border: 1px solid #2a1515;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #553333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .vs-yes {
+    flex: 1;
+    background: #0a120a;
+    border: 1px solid #1a2f1a;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #6aab6a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* ─── SCENE 7: CTA Final ─── */
+  #s7 {
+    background: radial-gradient(ellipse at center, #111 0%, #0a0a0a 70%);
+  }
+  #s7 .wolf-big { font-size: 80px; margin-bottom: 16px; opacity: 0; transform: translateY(-20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  #s7 .wolf-big.visible { opacity: 1; transform: translateY(0); }
+  #s7 .cta-title {
+    font-size: 56px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.2s;
+  }
+  #s7 .cta-title.visible { opacity: 1; }
+  #s7 .cta-title span { color: #f5c842; }
+  #s7 .cta-sub {
+    font-size: 20px;
+    color: #555;
+    text-align: center;
+    margin-top: 12px;
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.4s;
+  }
+  #s7 .cta-sub.visible { opacity: 1; }
+  #s7 .cta-url {
+    margin-top: 48px;
+    background: #f5c842;
+    color: #0a0a0a;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 16px 48px;
+    border-radius: 100px;
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.6s;
+    cursor: pointer;
+  }
+  #s7 .cta-url.visible { opacity: 1; }
+  #s7 .cta-bottom {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #333;
+    letter-spacing: 2px;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.8s;
+  }
+  #s7 .cta-bottom.visible { opacity: 1; }
+
+  /* GRAIN overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 99;
+    opacity: 0.4;
+  }
+</style>
+</head>
+<body>
+
+<!-- PROGRESS -->
+<div id="progress" style="width:0%"></div>
+<div id="counter">1 / 7</div>
+<div id="skip" onclick="nextScene()">▶ próximo</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 1 — HOOK: mensagens sem resposta
+═══════════════════════════════════════════ -->
+<div class="scene active" id="s1">
+  <div class="messages">
+    <div>
+      <div class="msg" id="m1">💬 &nbsp;"Qual o status da obra?"</div>
+      <div class="msg-meta">Eduardo · há 2h · sem resposta</div>
+    </div>
+    <div>
+      <div class="msg" id="m2">💬 &nbsp;"Me manda o resumo da reunião de ontem"</div>
+      <div class="msg-meta">Pedro · há 1h · sem resposta</div>
+    </div>
+    <div>
+      <div class="msg" id="m3">💬 &nbsp;"Quanto temos em caixa esse mês?"</div>
+      <div class="msg-meta">Maria · há 45min · sem resposta</div>
+    </div>
+    <div>
+      <div class="msg" id="m4">💬 &nbsp;"Quando chega o próximo material?"</div>
+      <div class="msg-meta">Carlos · há 20min · sem resposta</div>
+    </div>
+  </div>
+  <div class="silence" id="silence1">● &nbsp; nenhuma resposta &nbsp; ●</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 2 — PROBLEMA: sistemas fragmentados
+═══════════════════════════════════════════ -->
+<div class="scene" id="s2">
+  <div class="headline">Seu conhecimento existe.<br><span>Mas está fragmentado.</span></div>
+  <div class="systems-grid">
+    <div class="sys-card disconnected" id="sys1"><div class="icon">💬</div><div class="label">WhatsApp</div></div>
+    <div class="sys-card disconnected" id="sys2"><div class="icon">📧</div><div class="label">E-mail</div></div>
+    <div class="sys-card disconnected" id="sys3"><div class="icon">📊</div><div class="label">Planilhas</div></div>
+    <div class="sys-card disconnected" id="sys4"><div class="icon">📁</div><div class="label">Notion</div></div>
+    <div class="sys-card disconnected" id="sys5"><div class="icon">🎫</div><div class="label">Tickets</div></div>
+    <div class="sys-card disconnected" id="sys6"><div class="icon">📅</div><div class="label">Calendário</div></div>
+    <div class="sys-card disconnected" id="sys7"><div class="icon">💼</div><div class="label">CRM</div></div>
+    <div class="sys-card disconnected" id="sys8"><div class="icon">🏗️</div><div class="label">ERP</div></div>
+  </div>
+  <div class="sub" id="s2sub">Cada sistema vive num mundo diferente. Ninguém tem a visão completa.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 3 — SOLUÇÃO: Lobo conecta tudo
+═══════════════════════════════════════════ -->
+<div class="scene" id="s3">
+  <div class="connect-grid">
+    <div class="conn-systems" id="left-sys">
+      <div class="conn-chip" id="c1">💬 WhatsApp</div>
+      <div class="conn-chip" id="c2">📧 E-mail</div>
+      <div class="conn-chip" id="c3">📊 Planilhas</div>
+      <div class="conn-chip" id="c4">🎫 Tickets</div>
+    </div>
+    <div class="conn-line" id="line-left"></div>
+    <div class="wolf-center" id="wolf-center">🐺</div>
+    <div class="conn-line" id="line-right" style="background: linear-gradient(90deg, #f5c842, #2a2a2a);"></div>
+    <div class="conn-systems" id="right-sys">
+      <div class="conn-chip" id="c5">✅ Resposta instantânea</div>
+      <div class="conn-chip" id="c6">📋 Resumos automáticos</div>
+      <div class="conn-chip" id="c7">🔔 Alertas inteligentes</div>
+      <div class="conn-chip" id="c8">📈 Visão completa</div>
+    </div>
+  </div>
+  <div class="insight" id="s3insight">
+    Lobo aprende como seu negócio <em>realmente funciona</em> — não como está escrito no manual.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 4 — 3 PILARES
+═══════════════════════════════════════════ -->
+<div class="scene" id="s4">
+  <div class="section-label" id="s4label">Como funciona</div>
+  <div class="headline" id="s4headline">Três capacidades. Um agente.</div>
+  <div class="pillars">
+    <div class="pillar" id="p1">
+      <div class="p-icon">🔍</div>
+      <div class="p-title"><span>Descobre</span></div>
+      <div class="p-desc">Mapeia seus processos reais a partir dos dados que você já tem. Sem entrevistas, sem consultores, sem workshops.</div>
+    </div>
+    <div class="pillar" id="p2">
+      <div class="p-icon">⚡</div>
+      <div class="p-title"><span>Executa</span></div>
+      <div class="p-desc">Responde, resume, alerta e age — no WhatsApp, no e-mail, onde você já trabalha. Sem mudar nada.</div>
+    </div>
+    <div class="pillar" id="p3">
+      <div class="p-icon">🔄</div>
+      <div class="p-title"><span>Aprende</span></div>
+      <div class="p-desc">A cada interação, fica mais preciso. Quando seu negócio muda, Lobo se atualiza automaticamente.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 5 — RESULTADO: antes vs depois
+═══════════════════════════════════════════ -->
+<div class="scene" id="s5">
+  <div class="headline">As mesmas perguntas.<br>Respostas em segundos.</div>
+  <div class="sub">Sem dashboards. Sem treinamentos. Sem espera.</div>
+
+  <div class="qa-pair" id="qa1">
+    <div class="q-msg">💬 &nbsp;"Qual o status da obra?"</div>
+    <div style="clear:both"></div>
+    <div class="a-msg"><span class="a-prefix">🐺 LOBO</span>Etapa 3 concluída. Próxima entrega: sexta-feira. Pendência: aprovação do material de cobertura.</div>
+  </div>
+
+  <div class="qa-pair" id="qa2">
+    <div class="q-msg">💬 &nbsp;"Resumo da reunião de ontem?"</div>
+    <div style="clear:both"></div>
+    <div class="a-msg"><span class="a-prefix">🐺 LOBO</span>3 decisões: (1) Prazo prorrogado 7 dias, (2) Pedro assume responsabilidade técnica, (3) Próxima reunião quinta às 15h.</div>
+  </div>
+
+  <div class="result-stat" id="s5stat">
+    Perguntas que levavam <strong>horas pra responder</strong>. Agora: <strong style="color:#f5c842">segundos</strong>.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 6 — DIFERENCIAL: não é um chatbot
+═══════════════════════════════════════════ -->
+<div class="scene" id="s6">
+  <div class="not-a" id="s6nota">Não é mais um chatbot genérico.</div>
+  <div class="is-a" id="s6isa">É um agente que entende<br>o <span>seu</span> negócio.</div>
+
+  <div class="vs-row" id="vs1">
+    <div class="vs-no">❌ &nbsp; Começa do zero toda vez</div>
+    <div class="vs-yes">✅ &nbsp; Aprende e lembra de tudo</div>
+  </div>
+  <div class="vs-row" id="vs2">
+    <div class="vs-no">❌ &nbsp; Precisa de prompts detalhados</div>
+    <div class="vs-yes">✅ &nbsp; Entende contexto automaticamente</div>
+  </div>
+  <div class="vs-row" id="vs3">
+    <div class="vs-no">❌ &nbsp; Vive num app separado</div>
+    <div class="vs-yes">✅ &nbsp; Trabalha onde você já está</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCENE 7 — CTA FINAL
+═══════════════════════════════════════════ -->
+<div class="scene" id="s7">
+  <div class="wolf-big" id="s7wolf">🐺</div>
+  <div class="cta-title" id="s7title">Lobo.<br>Seu negócio,<br>na <span>velocidade certa</span>.</div>
+  <div class="cta-sub" id="s7sub">O agente de IA que aprende como você trabalha.</div>
+  <div class="cta-url" id="s7url">deco.ooo</div>
+  <div class="cta-bottom" id="s7bottom">POWERED BY LOBO AI &nbsp;·&nbsp; 🐺</div>
+</div>
+
+<script>
+const SCENES = ['s1','s2','s3','s4','s5','s6','s7'];
+const DURATIONS = [5000, 5000, 5500, 6000, 6000, 5500, 999999];
+let current = 0;
+let timer = null;
+
+// ── Scene animations ──
+const animations = {
+  s1: () => {
+    const msgs = ['m1','m2','m3','m4'];
+    msgs.forEach((id, i) => {
+      setTimeout(() => {
+        document.getElementById(id).classList.add('visible');
+      }, i * 600);
+    });
+    setTimeout(() => {
+      document.getElementById('silence1').classList.add('visible');
+    }, 3200);
+  },
+
+  s2: () => {
+    const sys = ['sys1','sys2','sys3','sys4','sys5','sys6','sys7','sys8'];
+    sys.forEach((id, i) => {
+      setTimeout(() => {
+        document.getElementById(id).classList.add('visible');
+        document.getElementById(id).classList.remove('disconnected');
+      }, i * 250);
+    });
+    setTimeout(() => document.getElementById('s2sub').classList.add('visible'), 2800);
+  },
+
+  s3: () => {
+    setTimeout(() => document.getElementById('wolf-center').classList.add('visible'), 200);
+    setTimeout(() => document.getElementById('line-left').classList.add('visible'), 600);
+    setTimeout(() => document.getElementById('line-right').classList.add('visible'), 600);
+    ['c1','c2','c3','c4'].forEach((id, i) => {
+      setTimeout(() => document.getElementById(id).classList.add('lit'), 800 + i * 300);
+    });
+    ['c5','c6','c7','c8'].forEach((id, i) => {
+      setTimeout(() => document.getElementById(id).classList.add('lit'), 800 + i * 300);
+    });
+    setTimeout(() => document.getElementById('s3insight').classList.add('visible'), 2800);
+  },
+
+  s4: () => {
+    setTimeout(() => document.getElementById('s4label').classList.add('visible'), 100);
+    setTimeout(() => document.getElementById('s4headline').classList.add('visible'), 300);
+    setTimeout(() => document.getElementById('p1').classList.add('visible'), 700);
+    setTimeout(() => document.getElementById('p2').classList.add('visible'), 1000);
+    setTimeout(() => document.getElementById('p3').classList.add('visible'), 1300);
+  },
+
+  s5: () => {
+    setTimeout(() => document.getElementById('qa1').classList.add('visible'), 600);
+    setTimeout(() => document.getElementById('qa2').classList.add('visible'), 2200);
+    setTimeout(() => document.getElementById('s5stat').classList.add('visible'), 4000);
+  },
+
+  s6: () => {
+    setTimeout(() => document.getElementById('s6nota').classList.add('visible'), 300);
+    setTimeout(() => document.getElementById('s6isa').classList.add('visible'), 800);
+    setTimeout(() => document.getElementById('vs1').classList.add('visible'), 1800);
+    setTimeout(() => document.getElementById('vs2').classList.add('visible'), 2200);
+    setTimeout(() => document.getElementById('vs3').classList.add('visible'), 2600);
+  },
+
+  s7: () => {
+    setTimeout(() => document.getElementById('s7wolf').classList.add('visible'), 200);
+    setTimeout(() => document.getElementById('s7title').classList.add('visible'), 600);
+    setTimeout(() => document.getElementById('s7sub').classList.add('visible'), 1000);
+    setTimeout(() => document.getElementById('s7url').classList.add('visible'), 1600);
+    setTimeout(() => document.getElementById('s7bottom').classList.add('visible'), 2200);
+  }
+};
+
+function showScene(idx) {
+  // hide all
+  SCENES.forEach(id => document.getElementById(id).classList.remove('active'));
+  // show current
+  const sceneEl = document.getElementById(SCENES[idx]);
+  sceneEl.classList.add('active');
+  // update counter
+  document.getElementById('counter').textContent = `${idx+1} / ${SCENES.length}`;
+  // update progress
+  document.getElementById('progress').style.width = `${((idx+1)/SCENES.length)*100}%`;
+  // run animation
+  if (animations[SCENES[idx]]) animations[SCENES[idx]]();
+  // schedule next
+  clearTimeout(timer);
+  if (idx < SCENES.length - 1) {
+    timer = setTimeout(() => nextScene(), DURATIONS[idx]);
+  }
+}
+
+function nextScene() {
+  if (current < SCENES.length - 1) {
+    current++;
+    showScene(current);
+  }
+}
+
+function prevScene() {
+  if (current > 0) {
+    current--;
+    showScene(current);
+  }
+}
+
+// keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextScene();
+  if (e.key === 'ArrowLeft') prevScene();
+});
+
+// click navigation
+document.addEventListener('click', (e) => {
+  if (e.target.id !== 'skip') nextScene();
+});
+
+// start
+showScene(0);
+</script>
+</body>
+</html>
