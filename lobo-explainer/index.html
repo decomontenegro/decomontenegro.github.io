@@ -7,741 +7,637 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     background: #0a0a0a;
     color: #f0ede8;
     font-family: 'Inter', sans-serif;
-    overflow: hidden;
-    width: 1280px;
-    height: 720px;
-    position: relative;
   }
 
-  /* SCENES */
-  .scene {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.6s ease;
-    padding: 60px;
-  }
-  .scene.active {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  /* PROGRESS BAR */
+  /* ── PROGRESS BAR ── */
   #progress {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    background: #f5c842;
-    transition: width 0.3s linear;
-    z-index: 100;
+    position: fixed; bottom: 0; left: 0;
+    height: 3px; background: #f5c842;
+    transition: width 0.4s linear; z-index: 200;
   }
-
-  /* SCENE COUNTER */
   #counter {
-    position: fixed;
-    bottom: 18px;
-    right: 28px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.25);
-    letter-spacing: 2px;
-    z-index: 100;
+    position: fixed; bottom: 16px; right: 24px;
+    font-size: 11px; color: rgba(255,255,255,0.2);
+    letter-spacing: 2px; z-index: 200;
   }
-
-  /* SKIP */
   #skip {
-    position: fixed;
-    bottom: 12px;
-    left: 28px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.2);
-    cursor: pointer;
-    letter-spacing: 1px;
-    z-index: 100;
-    transition: color 0.2s;
+    position: fixed; bottom: 10px; left: 24px;
+    font-size: 11px; color: rgba(255,255,255,0.18);
+    cursor: pointer; letter-spacing: 1px; z-index: 200;
+    transition: color 0.2s; user-select: none;
   }
   #skip:hover { color: rgba(255,255,255,0.5); }
 
-  /* ─── SCENE 1: Hook — mensagens sem resposta ─── */
-  #s1 .messages {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    width: 560px;
+  /* ── SCENES ── */
+  .scene {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 5vh 6vw;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.55s ease;
   }
-  .msg {
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
-    border-radius: 18px 18px 18px 4px;
-    padding: 14px 22px;
-    font-size: 18px;
-    color: #d0ccc4;
-    opacity: 0;
-    transform: translateX(-20px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    max-width: 420px;
-  }
-  .msg.visible { opacity: 1; transform: translateX(0); }
-  .msg-meta {
-    font-size: 11px;
-    color: #444;
-    margin-top: 4px;
-    margin-left: 4px;
-  }
-  #s1 .silence {
-    margin-top: 32px;
-    font-size: 13px;
-    color: #444;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-  }
-  #s1 .silence.visible { opacity: 1; }
+  .scene.active { opacity: 1; pointer-events: all; }
 
-  /* ─── SCENE 2: Problema — sistemas desconectados ─── */
-  #s2 .headline {
-    font-size: 36px;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 48px;
-    line-height: 1.2;
+  /* grain */
+  body::after {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 99; opacity: 0.35;
   }
-  #s2 .headline span { color: #f5c842; }
-  .systems-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    width: 700px;
+
+  /* ── UTILITY ── */
+  .fade-up {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  .fade-up.in { opacity: 1; transform: translateY(0); }
+  .fade-in { opacity: 0; transition: opacity 0.45s ease; }
+  .fade-in.in { opacity: 1; }
+
+  svg.icon { display: inline-block; flex-shrink: 0; }
+
+  /* ════════════════════════════════════════
+     SCENE 1 — Hook
+  ════════════════════════════════════════ */
+  #s1 .msgs { display: flex; flex-direction: column; gap: clamp(10px,2vh,16px); width: min(520px,88vw); }
+  .msg-wrap { display: flex; flex-direction: column; gap: 4px; }
+  .msg-bubble {
+    background: #161616; border: 1px solid #242424;
+    border-radius: 16px 16px 16px 4px;
+    padding: 12px 20px; font-size: clamp(13px,1.6vw,17px);
+    color: #c8c4be; display: flex; align-items: center; gap: 12px;
+    opacity: 0; transform: translateX(-16px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    max-width: 440px;
+  }
+  .msg-bubble.in { opacity: 1; transform: translateX(0); }
+  .msg-meta { font-size: 11px; color: #383838; margin-left: 4px; }
+  #s1 .silence {
+    margin-top: clamp(20px,4vh,36px);
+    font-size: 12px; color: #3a3a3a;
+    letter-spacing: 4px; text-transform: uppercase;
+    opacity: 0; transition: opacity 0.8s ease;
+  }
+  #s1 .silence.in { opacity: 1; }
+
+  /* ════════════════════════════════════════
+     SCENE 2 — Problema
+  ════════════════════════════════════════ */
+  #s2 .headline {
+    font-size: clamp(22px,3.5vw,40px); font-weight: 700;
+    text-align: center; margin-bottom: clamp(28px,5vh,52px); line-height: 1.2;
+  }
+  #s2 .headline em { color: #f5c842; font-style: normal; }
+  .sys-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: clamp(12px,2vw,20px); width: min(680px,90vw);
   }
   .sys-card {
-    background: #111;
-    border: 1px solid #222;
-    border-radius: 16px;
-    padding: 20px 16px;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(20px);
+    background: #0e0e0e; border: 1px solid #1c1c1c;
+    border-radius: 14px; padding: clamp(14px,2.5vh,22px) 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    opacity: 0; transform: translateY(16px);
     transition: opacity 0.4s ease, transform 0.4s ease;
   }
-  .sys-card.visible { opacity: 1; transform: translateY(0); }
-  .sys-card .icon { font-size: 28px; margin-bottom: 8px; }
-  .sys-card .label { font-size: 12px; color: #666; letter-spacing: 1px; }
-  .sys-card.disconnected { border-color: #2a1a1a; }
-  .sys-card.disconnected .icon { filter: grayscale(0.7); opacity: 0.5; }
+  .sys-card.in { opacity: 1; transform: translateY(0); }
+  .sys-card .sys-label { font-size: 11px; color: #555; letter-spacing: 1px; }
   #s2 .sub {
-    margin-top: 36px;
-    font-size: 16px;
-    color: #666;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.6s ease 0.4s;
+    margin-top: clamp(20px,4vh,36px); font-size: clamp(13px,1.4vw,16px);
+    color: #555; text-align: center; opacity: 0; transition: opacity 0.6s ease;
   }
-  #s2 .sub.visible { opacity: 1; }
+  #s2 .sub.in { opacity: 1; }
 
-  /* ─── SCENE 3: Solução — Lobo conecta tudo ─── */
-  #s3 .wolf-logo {
-    font-size: 72px;
-    margin-bottom: 8px;
-    opacity: 0;
-    transform: scale(0.5);
-    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  #s3 .wolf-logo.visible { opacity: 1; transform: scale(1); }
-  #s3 .wolf-name {
-    font-size: 48px;
-    font-weight: 900;
-    letter-spacing: -1px;
-    margin-bottom: 4px;
-    opacity: 0;
-    transition: opacity 0.5s ease 0.2s;
-  }
-  #s3 .wolf-name.visible { opacity: 1; }
-  #s3 .wolf-tagline {
-    font-size: 16px;
-    color: #666;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 52px;
-    opacity: 0;
-    transition: opacity 0.5s ease 0.4s;
-  }
-  #s3 .wolf-tagline.visible { opacity: 1; }
+  /* ════════════════════════════════════════
+     SCENE 3 — Solução
+  ════════════════════════════════════════ */
   .connect-grid {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    position: relative;
+    display: flex; align-items: center; gap: 0;
+    width: min(860px,94vw);
   }
-  .conn-systems {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+  .conn-col { display: flex; flex-direction: column; gap: 10px; flex: 1; }
   .conn-chip {
-    background: #141414;
-    border: 1px solid #2a2a2a;
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-size: 13px;
-    color: #888;
-    opacity: 0;
-    transition: opacity 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    background: #111; border: 1px solid #1e1e1e;
+    border-radius: 10px; padding: 10px 14px;
+    font-size: clamp(11px,1.3vw,14px); color: #555;
+    display: flex; align-items: center; gap: 9px;
+    opacity: 0; transition: opacity 0.35s ease, border-color 0.35s ease, color 0.35s ease;
   }
-  .conn-chip.lit {
-    opacity: 1;
-    border-color: #f5c842;
-    color: #f0ede8;
-  }
+  .conn-chip.lit { opacity: 1; border-color: #f5c842; color: #e8e4dc; }
   .conn-line {
-    width: 80px;
-    height: 2px;
-    background: linear-gradient(90deg, #2a2a2a, #f5c842);
-    opacity: 0;
+    flex: 0 0 60px; height: 2px; opacity: 0;
     transition: opacity 0.4s ease;
     margin: 0 8px;
   }
-  .conn-line.visible { opacity: 1; }
-  .wolf-center {
-    background: #f5c842;
-    color: #0a0a0a;
-    font-size: 32px;
-    width: 80px;
-    height: 80px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    opacity: 0;
-    transform: scale(0.7);
+  .conn-line.left { background: linear-gradient(90deg, #252525, #f5c842); }
+  .conn-line.right { background: linear-gradient(90deg, #f5c842, #252525); }
+  .conn-line.in { opacity: 1; }
+  .wolf-hub {
+    background: #f5c842; color: #0a0a0a;
+    width: clamp(64px,7vw,86px); height: clamp(64px,7vw,86px);
+    border-radius: 20px; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    opacity: 0; transform: scale(0.7);
     transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-    margin: 0 8px;
   }
-  .wolf-center.visible { opacity: 1; transform: scale(1); }
+  .wolf-hub.in { opacity: 1; transform: scale(1); }
   #s3 .insight {
-    margin-top: 36px;
-    font-size: 18px;
-    color: #888;
-    text-align: center;
-    max-width: 560px;
-    opacity: 0;
-    transition: opacity 0.6s ease;
+    margin-top: clamp(28px,4vh,44px); font-size: clamp(14px,1.5vw,18px);
+    color: #666; text-align: center; max-width: min(580px,90vw);
+    opacity: 0; transition: opacity 0.6s ease;
   }
-  #s3 .insight.visible { opacity: 1; }
-  #s3 .insight em { color: #f0ede8; font-style: normal; }
+  #s3 .insight.in { opacity: 1; }
+  #s3 .insight em { color: #e8e4dc; font-style: normal; }
 
-  /* ─── SCENE 4: 3 Pilares ─── */
-  #s4 .section-label {
-    font-size: 12px;
-    letter-spacing: 4px;
-    color: #f5c842;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+  /* ════════════════════════════════════════
+     SCENE 4 — Três pilares
+  ════════════════════════════════════════ */
+  #s4 .s-label {
+    font-size: 11px; letter-spacing: 4px; color: #f5c842;
+    text-transform: uppercase; margin-bottom: 14px;
   }
-  #s4 .section-label.visible { opacity: 1; }
   #s4 .headline {
-    font-size: 40px;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 56px;
-    opacity: 0;
-    transition: opacity 0.4s ease 0.1s;
+    font-size: clamp(24px,3.5vw,42px); font-weight: 700;
+    text-align: center; margin-bottom: clamp(28px,5vh,52px);
   }
-  #s4 .headline.visible { opacity: 1; }
-  .pillars {
-    display: flex;
-    gap: 32px;
-  }
+  .pillars { display: flex; gap: clamp(14px,2vw,28px); width: min(860px,94vw); }
   .pillar {
-    flex: 1;
-    background: #111;
-    border: 1px solid #1e1e1e;
-    border-radius: 20px;
-    padding: 36px 28px;
-    opacity: 0;
-    transform: translateY(30px);
+    flex: 1; background: #0e0e0e; border: 1px solid #1a1a1a;
+    border-radius: 18px; padding: clamp(20px,3vh,34px) clamp(16px,2vw,26px);
+    opacity: 0; transform: translateY(28px);
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
-  .pillar.visible { opacity: 1; transform: translateY(0); }
-  .pillar .p-icon { font-size: 36px; margin-bottom: 16px; }
+  .pillar.in { opacity: 1; transform: translateY(0); }
+  .pillar .p-icon { margin-bottom: 14px; }
   .pillar .p-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: #f0ede8;
+    font-size: clamp(16px,1.8vw,21px); font-weight: 700;
+    margin-bottom: 10px; color: #f5c842;
   }
-  .pillar .p-title span { color: #f5c842; }
-  .pillar .p-desc { font-size: 14px; color: #666; line-height: 1.6; }
-  .pillar:hover { border-color: #f5c842; transition: border-color 0.2s; }
+  .pillar .p-desc { font-size: clamp(12px,1.2vw,14px); color: #555; line-height: 1.65; }
 
-  /* ─── SCENE 5: Resultado — respostas ─── */
+  /* ════════════════════════════════════════
+     SCENE 5 — Resultado
+  ════════════════════════════════════════ */
   #s5 .headline {
-    font-size: 36px;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 10px;
+    font-size: clamp(22px,3vw,38px); font-weight: 700;
+    text-align: center; margin-bottom: 8px; line-height: 1.2;
   }
   #s5 .sub {
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 44px;
-    text-align: center;
+    font-size: clamp(13px,1.4vw,16px); color: #484848;
+    margin-bottom: clamp(22px,4vh,40px); text-align: center;
   }
-  .qa-pair {
-    width: 700px;
-    margin-bottom: 24px;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-  .qa-pair.visible { opacity: 1; }
+  .qa-pair { width: min(680px,92vw); margin-bottom: clamp(14px,2.5vh,22px); }
+  .qa-pair.in { opacity: 1; }
   .q-msg {
-    background: #161616;
-    border: 1px solid #252525;
-    border-radius: 18px 18px 18px 4px;
-    padding: 12px 20px;
-    font-size: 15px;
-    color: #888;
-    display: inline-block;
-    margin-bottom: 8px;
+    background: #131313; border: 1px solid #212121;
+    border-radius: 16px 16px 16px 4px;
+    padding: 11px 18px; font-size: clamp(12px,1.3vw,15px); color: #777;
+    display: inline-flex; align-items: center; gap: 10px;
   }
   .a-msg {
-    background: #1a1f0e;
-    border: 1px solid #2d3a16;
-    border-radius: 18px 18px 4px 18px;
-    padding: 12px 20px;
-    font-size: 15px;
-    color: #a8d060;
-    display: inline-block;
-    float: right;
-    clear: both;
+    background: #0e120a; border: 1px solid #1e2d12;
+    border-radius: 16px 16px 4px 16px;
+    padding: 11px 18px; font-size: clamp(12px,1.3vw,15px); color: #88b04b;
+    display: inline-flex; align-items: flex-start; gap: 10px;
+    float: right; clear: both; margin-top: 6px;
   }
-  .a-prefix {
-    font-size: 11px;
-    color: #f5c842;
-    font-weight: 600;
-    margin-right: 6px;
-    letter-spacing: 1px;
+  .a-badge {
+    font-size: 10px; color: #f5c842; font-weight: 700;
+    letter-spacing: 1px; white-space: nowrap; padding-top: 2px;
   }
-  #s5 .result-stat {
-    margin-top: 32px;
-    text-align: center;
-    font-size: 14px;
-    color: #444;
-    opacity: 0;
-    transition: opacity 0.6s ease;
+  #s5 .stat {
+    margin-top: clamp(18px,3vh,32px); text-align: center;
+    font-size: clamp(12px,1.3vw,15px); color: #404040;
   }
-  #s5 .result-stat.visible { opacity: 1; }
-  #s5 .result-stat strong { color: #f0ede8; }
+  #s5 .stat strong { color: #e8e4dc; }
+  #s5 .stat em { color: #f5c842; font-style: normal; font-weight: 700; }
 
-  /* ─── SCENE 6: Diferencial ─── */
+  /* ════════════════════════════════════════
+     SCENE 6 — Diferencial
+  ════════════════════════════════════════ */
   #s6 .not-a {
-    font-size: 16px;
-    color: #444;
-    text-align: center;
-    letter-spacing: 1px;
-    margin-bottom: 16px;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    font-size: clamp(12px,1.3vw,15px); color: #404040;
+    letter-spacing: 1px; margin-bottom: 14px; text-align: center;
   }
-  #s6 .not-a.visible { opacity: 1; }
   #s6 .is-a {
-    font-size: 52px;
-    font-weight: 900;
-    text-align: center;
-    line-height: 1.1;
-    margin-bottom: 48px;
-    opacity: 0;
-    transition: opacity 0.5s ease 0.2s;
+    font-size: clamp(28px,4.5vw,56px); font-weight: 900;
+    text-align: center; line-height: 1.1;
+    margin-bottom: clamp(28px,5vh,50px);
   }
-  #s6 .is-a.visible { opacity: 1; }
-  #s6 .is-a span { color: #f5c842; }
+  #s6 .is-a em { color: #f5c842; font-style: normal; }
   .vs-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 12px;
-    width: 700px;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    display: flex; gap: clamp(12px,2vw,20px);
+    margin-bottom: clamp(10px,1.5vh,14px);
+    width: min(680px,92vw);
   }
-  .vs-row.visible { opacity: 1; }
-  .vs-no {
-    flex: 1;
-    background: #120a0a;
-    border: 1px solid #2a1515;
-    border-radius: 12px;
-    padding: 14px 18px;
-    font-size: 14px;
-    color: #553333;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  .vs-no, .vs-yes {
+    flex: 1; border-radius: 12px;
+    padding: 12px 16px; font-size: clamp(12px,1.2vw,14px);
+    display: flex; align-items: center; gap: 10px;
   }
-  .vs-yes {
-    flex: 1;
-    background: #0a120a;
-    border: 1px solid #1a2f1a;
-    border-radius: 12px;
-    padding: 14px 18px;
-    font-size: 14px;
-    color: #6aab6a;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .vs-no { background: #100808; border: 1px solid #2a1515; color: #583333; }
+  .vs-yes { background: #080f08; border: 1px solid #163016; color: #5a9a5a; }
 
-  /* ─── SCENE 7: CTA Final ─── */
-  #s7 {
-    background: radial-gradient(ellipse at center, #111 0%, #0a0a0a 70%);
-  }
-  #s7 .wolf-big { font-size: 80px; margin-bottom: 16px; opacity: 0; transform: translateY(-20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  #s7 .wolf-big.visible { opacity: 1; transform: translateY(0); }
+  /* ════════════════════════════════════════
+     SCENE 7 — CTA
+  ════════════════════════════════════════ */
+  #s7 { background: radial-gradient(ellipse at 50% 40%, #0f0f0f 0%, #0a0a0a 75%); }
+  #s7 .wolf-mark { margin-bottom: 20px; opacity: 0; transform: translateY(-16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  #s7 .wolf-mark.in { opacity: 1; transform: translateY(0); }
   #s7 .cta-title {
-    font-size: 56px;
-    font-weight: 900;
-    letter-spacing: -2px;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.6s ease 0.2s;
+    font-size: clamp(32px,5.5vw,64px); font-weight: 900;
+    letter-spacing: -2px; text-align: center; line-height: 1.05;
+    opacity: 0; transition: opacity 0.6s ease 0.2s;
   }
-  #s7 .cta-title.visible { opacity: 1; }
-  #s7 .cta-title span { color: #f5c842; }
+  #s7 .cta-title.in { opacity: 1; }
+  #s7 .cta-title em { color: #f5c842; font-style: normal; }
   #s7 .cta-sub {
-    font-size: 20px;
-    color: #555;
-    text-align: center;
-    margin-top: 12px;
-    letter-spacing: 1px;
-    opacity: 0;
-    transition: opacity 0.6s ease 0.4s;
+    font-size: clamp(14px,1.5vw,20px); color: #484848;
+    margin-top: 12px; letter-spacing: 0.5px; text-align: center;
+    opacity: 0; transition: opacity 0.6s ease 0.4s;
   }
-  #s7 .cta-sub.visible { opacity: 1; }
-  #s7 .cta-url {
-    margin-top: 48px;
-    background: #f5c842;
-    color: #0a0a0a;
-    font-size: 18px;
-    font-weight: 700;
-    padding: 16px 48px;
-    border-radius: 100px;
-    letter-spacing: 1px;
-    opacity: 0;
-    transition: opacity 0.6s ease 0.6s;
-    cursor: pointer;
+  #s7 .cta-sub.in { opacity: 1; }
+  #s7 .cta-btn {
+    margin-top: clamp(28px,5vh,52px);
+    background: #f5c842; color: #0a0a0a;
+    font-size: clamp(14px,1.5vw,18px); font-weight: 700;
+    padding: 14px clamp(28px,4vw,52px); border-radius: 100px;
+    letter-spacing: 0.5px; cursor: pointer;
+    opacity: 0; transition: opacity 0.6s ease 0.65s;
   }
-  #s7 .cta-url.visible { opacity: 1; }
-  #s7 .cta-bottom {
-    margin-top: 24px;
-    font-size: 13px;
-    color: #333;
-    letter-spacing: 2px;
-    opacity: 0;
-    transition: opacity 0.6s ease 0.8s;
+  #s7 .cta-btn.in { opacity: 1; }
+  #s7 .cta-foot {
+    margin-top: 20px; font-size: 11px; color: #2a2a2a;
+    letter-spacing: 2px; text-align: center;
+    opacity: 0; transition: opacity 0.6s ease 0.9s;
   }
-  #s7 .cta-bottom.visible { opacity: 1; }
-
-  /* GRAIN overlay */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 99;
-    opacity: 0.4;
-  }
+  #s7 .cta-foot.in { opacity: 1; }
 </style>
 </head>
 <body>
 
-<!-- PROGRESS -->
 <div id="progress" style="width:0%"></div>
 <div id="counter">1 / 7</div>
 <div id="skip" onclick="nextScene()">▶ próximo</div>
 
-<!-- ═══════════════════════════════════════════
-     SCENE 1 — HOOK: mensagens sem resposta
-═══════════════════════════════════════════ -->
+<!-- SVG ICONS (inline, reusable) -->
+<svg style="display:none">
+  <symbol id="ic-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </symbol>
+  <symbol id="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2"/>
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+  </symbol>
+  <symbol id="ic-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
+  </symbol>
+  <symbol id="ic-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/>
+    <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+  </symbol>
+  <symbol id="ic-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+  </symbol>
+  <symbol id="ic-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"/>
+    <path d="M16 2v4M8 2v4M3 10h18"/>
+  </symbol>
+  <symbol id="ic-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="7" width="20" height="14" rx="2"/>
+    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+  </symbol>
+  <symbol id="ic-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+    <circle cx="12" cy="12" r="3"/>
+  </symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+  </symbol>
+  <symbol id="ic-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+  </symbol>
+  <symbol id="ic-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+    <path d="M21 3v5h-5"/>
+    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+    <path d="M8 16H3v5"/>
+  </symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 6 9 17l-5-5"/>
+  </symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 6 6 18M6 6l12 12"/>
+  </symbol>
+  <symbol id="ic-reply" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="9 17 4 12 9 7"/>
+    <path d="M20 18v-2a4 4 0 0 0-4-4H4"/>
+  </symbol>
+  <symbol id="ic-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+  </symbol>
+  <symbol id="ic-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+    <circle cx="12" cy="12" r="3"/>
+  </symbol>
+  <symbol id="ic-wolf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 3 2 9l3 2-1 4 4-2 4 3 4-3 4 2-1-4 3-2-2-6-4 3-4-1-4 1z"/>
+    <circle cx="9" cy="11" r="1" fill="currentColor"/>
+    <circle cx="15" cy="11" r="1" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<!-- ═══════════════ SCENE 1 ═══════════════ -->
 <div class="scene active" id="s1">
-  <div class="messages">
-    <div>
-      <div class="msg" id="m1">💬 &nbsp;"Qual o status da obra?"</div>
+  <div class="msgs">
+    <div class="msg-wrap">
+      <div class="msg-bubble" id="m1">
+        <svg class="icon" width="18" height="18" style="color:#555"><use href="#ic-msg"/></svg>
+        "Qual o status da obra?"
+      </div>
       <div class="msg-meta">Eduardo · há 2h · sem resposta</div>
     </div>
-    <div>
-      <div class="msg" id="m2">💬 &nbsp;"Me manda o resumo da reunião de ontem"</div>
+    <div class="msg-wrap">
+      <div class="msg-bubble" id="m2">
+        <svg class="icon" width="18" height="18" style="color:#555"><use href="#ic-msg"/></svg>
+        "Me manda o resumo da reunião de ontem"
+      </div>
       <div class="msg-meta">Pedro · há 1h · sem resposta</div>
     </div>
-    <div>
-      <div class="msg" id="m3">💬 &nbsp;"Quanto temos em caixa esse mês?"</div>
+    <div class="msg-wrap">
+      <div class="msg-bubble" id="m3">
+        <svg class="icon" width="18" height="18" style="color:#555"><use href="#ic-msg"/></svg>
+        "Quanto temos em caixa esse mês?"
+      </div>
       <div class="msg-meta">Maria · há 45min · sem resposta</div>
     </div>
-    <div>
-      <div class="msg" id="m4">💬 &nbsp;"Quando chega o próximo material?"</div>
+    <div class="msg-wrap">
+      <div class="msg-bubble" id="m4">
+        <svg class="icon" width="18" height="18" style="color:#555"><use href="#ic-msg"/></svg>
+        "Quando chega o próximo material?"
+      </div>
       <div class="msg-meta">Carlos · há 20min · sem resposta</div>
     </div>
   </div>
-  <div class="silence" id="silence1">● &nbsp; nenhuma resposta &nbsp; ●</div>
+  <div class="silence" id="sil1">● &nbsp; nenhuma resposta &nbsp; ●</div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCENE 2 — PROBLEMA: sistemas fragmentados
-═══════════════════════════════════════════ -->
+<!-- ═══════════════ SCENE 2 ═══════════════ -->
 <div class="scene" id="s2">
-  <div class="headline">Seu conhecimento existe.<br><span>Mas está fragmentado.</span></div>
-  <div class="systems-grid">
-    <div class="sys-card disconnected" id="sys1"><div class="icon">💬</div><div class="label">WhatsApp</div></div>
-    <div class="sys-card disconnected" id="sys2"><div class="icon">📧</div><div class="label">E-mail</div></div>
-    <div class="sys-card disconnected" id="sys3"><div class="icon">📊</div><div class="label">Planilhas</div></div>
-    <div class="sys-card disconnected" id="sys4"><div class="icon">📁</div><div class="label">Notion</div></div>
-    <div class="sys-card disconnected" id="sys5"><div class="icon">🎫</div><div class="label">Tickets</div></div>
-    <div class="sys-card disconnected" id="sys6"><div class="icon">📅</div><div class="label">Calendário</div></div>
-    <div class="sys-card disconnected" id="sys7"><div class="icon">💼</div><div class="label">CRM</div></div>
-    <div class="sys-card disconnected" id="sys8"><div class="icon">🏗️</div><div class="label">ERP</div></div>
+  <div class="headline fade-up" id="s2h">Seu conhecimento existe.<br><em>Mas está fragmentado.</em></div>
+  <div class="sys-grid">
+    <div class="sys-card" id="sy1">
+      <svg class="icon" width="28" height="28" style="color:#3a3a3a"><use href="#ic-msg"/></svg>
+      <div class="sys-label">WhatsApp</div>
+    </div>
+    <div class="sys-card" id="sy2">
+      <svg class="icon" width="28" height="28" style="color:#3a3a3a"><use href="#ic-mail"/></svg>
+      <div class="sys-label">E-mail</div>
+    </div>
+    <div class="sys-card" id="sy3">
+      <svg class="icon" width="28" height="28" style="color:#3a3a3a"><use href="#ic-table"/></svg>
+      <div class="sys-label">Planilhas</div>
+    </div>
+    <div class="sys-card" id="sy4">
+      <svg class="icon" width="28" height="28" style="color:#3a3a3a"><use href="#ic-file"/></svg>
+      <div class="sys-label">Notion</div>
+    </div>
+    <div class="sys-card" id="sy5">
+      <svg class="icon" width="28" height="28" style="color:#3a3a3a"><use href="#ic-ticket"/></svg>
+      <div class="sys-label">Tickets</div>
+    </div>
+    <div class="sys-card" id="sy6">
+      <svg class="icon" width="28" height="28" style="color:#3a3a3a"><use href="#ic-calendar"/></svg>
+      <div class="sys-label">Calendário</div>
+    </div>
+    <div class="sys-card" id="sy7">
+      <svg class="icon" width="28" height="28" style="color:#3a3a3a"><use href="#ic-briefcase"/></svg>
+      <div class="sys-label">CRM</div>
+    </div>
+    <div class="sys-card" id="sy8">
+      <svg class="icon" width="28" height="28" style="color:#3a3a3a"><use href="#ic-settings"/></svg>
+      <div class="sys-label">ERP</div>
+    </div>
   </div>
   <div class="sub" id="s2sub">Cada sistema vive num mundo diferente. Ninguém tem a visão completa.</div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCENE 3 — SOLUÇÃO: Lobo conecta tudo
-═══════════════════════════════════════════ -->
+<!-- ═══════════════ SCENE 3 ═══════════════ -->
 <div class="scene" id="s3">
   <div class="connect-grid">
-    <div class="conn-systems" id="left-sys">
-      <div class="conn-chip" id="c1">💬 WhatsApp</div>
-      <div class="conn-chip" id="c2">📧 E-mail</div>
-      <div class="conn-chip" id="c3">📊 Planilhas</div>
-      <div class="conn-chip" id="c4">🎫 Tickets</div>
+    <div class="conn-col">
+      <div class="conn-chip" id="c1">
+        <svg class="icon" width="16" height="16"><use href="#ic-msg"/></svg> WhatsApp
+      </div>
+      <div class="conn-chip" id="c2">
+        <svg class="icon" width="16" height="16"><use href="#ic-mail"/></svg> E-mail
+      </div>
+      <div class="conn-chip" id="c3">
+        <svg class="icon" width="16" height="16"><use href="#ic-table"/></svg> Planilhas
+      </div>
+      <div class="conn-chip" id="c4">
+        <svg class="icon" width="16" height="16"><use href="#ic-ticket"/></svg> Tickets
+      </div>
     </div>
-    <div class="conn-line" id="line-left"></div>
-    <div class="wolf-center" id="wolf-center">🐺</div>
-    <div class="conn-line" id="line-right" style="background: linear-gradient(90deg, #f5c842, #2a2a2a);"></div>
-    <div class="conn-systems" id="right-sys">
-      <div class="conn-chip" id="c5">✅ Resposta instantânea</div>
-      <div class="conn-chip" id="c6">📋 Resumos automáticos</div>
-      <div class="conn-chip" id="c7">🔔 Alertas inteligentes</div>
-      <div class="conn-chip" id="c8">📈 Visão completa</div>
+
+    <div class="conn-line left" id="ll"></div>
+
+    <div class="wolf-hub" id="wh">
+      <svg class="icon" width="38" height="38" style="color:#0a0a0a"><use href="#ic-wolf"/></svg>
+    </div>
+
+    <div class="conn-line right" id="lr"></div>
+
+    <div class="conn-col">
+      <div class="conn-chip" id="c5">
+        <svg class="icon" width="16" height="16"><use href="#ic-reply"/></svg> Resposta instantânea
+      </div>
+      <div class="conn-chip" id="c6">
+        <svg class="icon" width="16" height="16"><use href="#ic-file"/></svg> Resumos automáticos
+      </div>
+      <div class="conn-chip" id="c7">
+        <svg class="icon" width="16" height="16"><use href="#ic-bell"/></svg> Alertas inteligentes
+      </div>
+      <div class="conn-chip" id="c8">
+        <svg class="icon" width="16" height="16"><use href="#ic-eye"/></svg> Visão completa
+      </div>
     </div>
   </div>
-  <div class="insight" id="s3insight">
+  <div class="insight" id="s3ins">
     Lobo aprende como seu negócio <em>realmente funciona</em> — não como está escrito no manual.
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCENE 4 — 3 PILARES
-═══════════════════════════════════════════ -->
+<!-- ═══════════════ SCENE 4 ═══════════════ -->
 <div class="scene" id="s4">
-  <div class="section-label" id="s4label">Como funciona</div>
-  <div class="headline" id="s4headline">Três capacidades. Um agente.</div>
+  <div class="s-label fade-in" id="s4lab">Como funciona</div>
+  <div class="headline fade-up" id="s4h">Três capacidades. Um agente.</div>
   <div class="pillars">
     <div class="pillar" id="p1">
-      <div class="p-icon">🔍</div>
-      <div class="p-title"><span>Descobre</span></div>
+      <div class="p-icon"><svg class="icon" width="32" height="32" style="color:#f5c842"><use href="#ic-search"/></svg></div>
+      <div class="p-title">Descobre</div>
       <div class="p-desc">Mapeia seus processos reais a partir dos dados que você já tem. Sem entrevistas, sem consultores, sem workshops.</div>
     </div>
     <div class="pillar" id="p2">
-      <div class="p-icon">⚡</div>
-      <div class="p-title"><span>Executa</span></div>
+      <div class="p-icon"><svg class="icon" width="32" height="32" style="color:#f5c842"><use href="#ic-zap"/></svg></div>
+      <div class="p-title">Executa</div>
       <div class="p-desc">Responde, resume, alerta e age — no WhatsApp, no e-mail, onde você já trabalha. Sem mudar nada.</div>
     </div>
     <div class="pillar" id="p3">
-      <div class="p-icon">🔄</div>
-      <div class="p-title"><span>Aprende</span></div>
+      <div class="p-icon"><svg class="icon" width="32" height="32" style="color:#f5c842"><use href="#ic-refresh"/></svg></div>
+      <div class="p-title">Aprende</div>
       <div class="p-desc">A cada interação, fica mais preciso. Quando seu negócio muda, Lobo se atualiza automaticamente.</div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCENE 5 — RESULTADO: antes vs depois
-═══════════════════════════════════════════ -->
+<!-- ═══════════════ SCENE 5 ═══════════════ -->
 <div class="scene" id="s5">
   <div class="headline">As mesmas perguntas.<br>Respostas em segundos.</div>
   <div class="sub">Sem dashboards. Sem treinamentos. Sem espera.</div>
 
-  <div class="qa-pair" id="qa1">
-    <div class="q-msg">💬 &nbsp;"Qual o status da obra?"</div>
+  <div class="qa-pair fade-in" id="qa1">
+    <div class="q-msg">
+      <svg class="icon" width="15" height="15" style="color:#555"><use href="#ic-msg"/></svg>
+      "Qual o status da obra?"
+    </div>
     <div style="clear:both"></div>
-    <div class="a-msg"><span class="a-prefix">🐺 LOBO</span>Etapa 3 concluída. Próxima entrega: sexta-feira. Pendência: aprovação do material de cobertura.</div>
+    <div class="a-msg">
+      <svg class="icon" width="15" height="15" style="color:#f5c842;flex-shrink:0;margin-top:2px"><use href="#ic-wolf"/></svg>
+      <span><span class="a-badge">LOBO</span> Etapa 3 concluída. Próxima entrega: sexta-feira. Pendência: aprovação do material de cobertura.</span>
+    </div>
   </div>
 
-  <div class="qa-pair" id="qa2">
-    <div class="q-msg">💬 &nbsp;"Resumo da reunião de ontem?"</div>
+  <div class="qa-pair fade-in" id="qa2">
+    <div class="q-msg">
+      <svg class="icon" width="15" height="15" style="color:#555"><use href="#ic-msg"/></svg>
+      "Resumo da reunião de ontem?"
+    </div>
     <div style="clear:both"></div>
-    <div class="a-msg"><span class="a-prefix">🐺 LOBO</span>3 decisões: (1) Prazo prorrogado 7 dias, (2) Pedro assume responsabilidade técnica, (3) Próxima reunião quinta às 15h.</div>
+    <div class="a-msg">
+      <svg class="icon" width="15" height="15" style="color:#f5c842;flex-shrink:0;margin-top:2px"><use href="#ic-wolf"/></svg>
+      <span><span class="a-badge">LOBO</span> 3 decisões: (1) Prazo prorrogado 7 dias, (2) Pedro assume responsabilidade técnica, (3) Próxima reunião quinta às 15h.</span>
+    </div>
   </div>
 
-  <div class="result-stat" id="s5stat">
-    Perguntas que levavam <strong>horas pra responder</strong>. Agora: <strong style="color:#f5c842">segundos</strong>.
+  <div class="stat fade-in" id="s5st">
+    Perguntas que levavam <strong>horas pra responder</strong>. Agora: <em>segundos</em>.
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCENE 6 — DIFERENCIAL: não é um chatbot
-═══════════════════════════════════════════ -->
+<!-- ═══════════════ SCENE 6 ═══════════════ -->
 <div class="scene" id="s6">
-  <div class="not-a" id="s6nota">Não é mais um chatbot genérico.</div>
-  <div class="is-a" id="s6isa">É um agente que entende<br>o <span>seu</span> negócio.</div>
+  <div class="not-a fade-in" id="s6na">Não é mais um chatbot genérico.</div>
+  <div class="is-a fade-up" id="s6ia">É um agente que entende<br>o <em>seu</em> negócio.</div>
 
-  <div class="vs-row" id="vs1">
-    <div class="vs-no">❌ &nbsp; Começa do zero toda vez</div>
-    <div class="vs-yes">✅ &nbsp; Aprende e lembra de tudo</div>
+  <div class="vs-row fade-in" id="vs1">
+    <div class="vs-no"><svg class="icon" width="16" height="16" style="color:#7a3333"><use href="#ic-x"/></svg> Começa do zero toda vez</div>
+    <div class="vs-yes"><svg class="icon" width="16" height="16" style="color:#4a8a4a"><use href="#ic-check"/></svg> Aprende e lembra de tudo</div>
   </div>
-  <div class="vs-row" id="vs2">
-    <div class="vs-no">❌ &nbsp; Precisa de prompts detalhados</div>
-    <div class="vs-yes">✅ &nbsp; Entende contexto automaticamente</div>
+  <div class="vs-row fade-in" id="vs2">
+    <div class="vs-no"><svg class="icon" width="16" height="16" style="color:#7a3333"><use href="#ic-x"/></svg> Precisa de prompts detalhados</div>
+    <div class="vs-yes"><svg class="icon" width="16" height="16" style="color:#4a8a4a"><use href="#ic-check"/></svg> Entende contexto automaticamente</div>
   </div>
-  <div class="vs-row" id="vs3">
-    <div class="vs-no">❌ &nbsp; Vive num app separado</div>
-    <div class="vs-yes">✅ &nbsp; Trabalha onde você já está</div>
+  <div class="vs-row fade-in" id="vs3">
+    <div class="vs-no"><svg class="icon" width="16" height="16" style="color:#7a3333"><use href="#ic-x"/></svg> Vive num app separado</div>
+    <div class="vs-yes"><svg class="icon" width="16" height="16" style="color:#4a8a4a"><use href="#ic-check"/></svg> Trabalha onde você já está</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCENE 7 — CTA FINAL
-═══════════════════════════════════════════ -->
+<!-- ═══════════════ SCENE 7 ═══════════════ -->
 <div class="scene" id="s7">
-  <div class="wolf-big" id="s7wolf">🐺</div>
-  <div class="cta-title" id="s7title">Lobo.<br>Seu negócio,<br>na <span>velocidade certa</span>.</div>
-  <div class="cta-sub" id="s7sub">O agente de IA que aprende como você trabalha.</div>
-  <div class="cta-url" id="s7url">deco.ooo</div>
-  <div class="cta-bottom" id="s7bottom">POWERED BY LOBO AI &nbsp;·&nbsp; 🐺</div>
+  <div class="wolf-mark" id="s7w">
+    <svg class="icon" width="72" height="72" style="color:#f5c842"><use href="#ic-wolf"/></svg>
+  </div>
+  <div class="cta-title" id="s7t">Lobo.<br>Seu negócio,<br>na <em>velocidade certa</em>.</div>
+  <div class="cta-sub" id="s7s">O agente de IA que aprende como você trabalha.</div>
+  <div class="cta-btn" id="s7b">deco.ooo</div>
+  <div class="cta-foot" id="s7f">POWERED BY LOBO AI</div>
 </div>
 
 <script>
 const SCENES = ['s1','s2','s3','s4','s5','s6','s7'];
-const DURATIONS = [5000, 5000, 5500, 6000, 6000, 5500, 999999];
-let current = 0;
-let timer = null;
+const DURATIONS = [5500, 5000, 5500, 6000, 6500, 5500, 999999];
+let current = 0, timer = null;
 
-// ── Scene animations ──
+function addClass(id, cls, delay) {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add(cls);
+  }, delay);
+}
+
 const animations = {
-  s1: () => {
-    const msgs = ['m1','m2','m3','m4'];
-    msgs.forEach((id, i) => {
-      setTimeout(() => {
-        document.getElementById(id).classList.add('visible');
-      }, i * 600);
-    });
-    setTimeout(() => {
-      document.getElementById('silence1').classList.add('visible');
-    }, 3200);
+  s1() {
+    ['m1','m2','m3','m4'].forEach((id, i) => addClass(id, 'in', i * 550));
+    addClass('sil1', 'in', 2800);
   },
-
-  s2: () => {
-    const sys = ['sys1','sys2','sys3','sys4','sys5','sys6','sys7','sys8'];
-    sys.forEach((id, i) => {
-      setTimeout(() => {
-        document.getElementById(id).classList.add('visible');
-        document.getElementById(id).classList.remove('disconnected');
-      }, i * 250);
-    });
-    setTimeout(() => document.getElementById('s2sub').classList.add('visible'), 2800);
+  s2() {
+    addClass('s2h', 'in', 100);
+    ['sy1','sy2','sy3','sy4','sy5','sy6','sy7','sy8'].forEach((id, i) => addClass(id, 'in', 300 + i * 220));
+    addClass('s2sub', 'in', 2600);
   },
-
-  s3: () => {
-    setTimeout(() => document.getElementById('wolf-center').classList.add('visible'), 200);
-    setTimeout(() => document.getElementById('line-left').classList.add('visible'), 600);
-    setTimeout(() => document.getElementById('line-right').classList.add('visible'), 600);
-    ['c1','c2','c3','c4'].forEach((id, i) => {
-      setTimeout(() => document.getElementById(id).classList.add('lit'), 800 + i * 300);
-    });
-    ['c5','c6','c7','c8'].forEach((id, i) => {
-      setTimeout(() => document.getElementById(id).classList.add('lit'), 800 + i * 300);
-    });
-    setTimeout(() => document.getElementById('s3insight').classList.add('visible'), 2800);
+  s3() {
+    addClass('wh', 'in', 200);
+    addClass('ll', 'in', 550);
+    addClass('lr', 'in', 550);
+    ['c1','c2','c3','c4'].forEach((id, i) => addClass(id, 'lit', 750 + i * 280));
+    ['c5','c6','c7','c8'].forEach((id, i) => addClass(id, 'lit', 750 + i * 280));
+    addClass('s3ins', 'in', 2800);
   },
-
-  s4: () => {
-    setTimeout(() => document.getElementById('s4label').classList.add('visible'), 100);
-    setTimeout(() => document.getElementById('s4headline').classList.add('visible'), 300);
-    setTimeout(() => document.getElementById('p1').classList.add('visible'), 700);
-    setTimeout(() => document.getElementById('p2').classList.add('visible'), 1000);
-    setTimeout(() => document.getElementById('p3').classList.add('visible'), 1300);
+  s4() {
+    addClass('s4lab', 'in', 100);
+    addClass('s4h', 'in', 250);
+    ['p1','p2','p3'].forEach((id, i) => addClass(id, 'in', 600 + i * 320));
   },
-
-  s5: () => {
-    setTimeout(() => document.getElementById('qa1').classList.add('visible'), 600);
-    setTimeout(() => document.getElementById('qa2').classList.add('visible'), 2200);
-    setTimeout(() => document.getElementById('s5stat').classList.add('visible'), 4000);
+  s5() {
+    addClass('qa1', 'in', 500);
+    addClass('qa2', 'in', 2200);
+    addClass('s5st', 'in', 4200);
   },
-
-  s6: () => {
-    setTimeout(() => document.getElementById('s6nota').classList.add('visible'), 300);
-    setTimeout(() => document.getElementById('s6isa').classList.add('visible'), 800);
-    setTimeout(() => document.getElementById('vs1').classList.add('visible'), 1800);
-    setTimeout(() => document.getElementById('vs2').classList.add('visible'), 2200);
-    setTimeout(() => document.getElementById('vs3').classList.add('visible'), 2600);
+  s6() {
+    addClass('s6na', 'in', 200);
+    addClass('s6ia', 'in', 650);
+    ['vs1','vs2','vs3'].forEach((id, i) => addClass(id, 'in', 1600 + i * 380));
   },
-
-  s7: () => {
-    setTimeout(() => document.getElementById('s7wolf').classList.add('visible'), 200);
-    setTimeout(() => document.getElementById('s7title').classList.add('visible'), 600);
-    setTimeout(() => document.getElementById('s7sub').classList.add('visible'), 1000);
-    setTimeout(() => document.getElementById('s7url').classList.add('visible'), 1600);
-    setTimeout(() => document.getElementById('s7bottom').classList.add('visible'), 2200);
+  s7() {
+    addClass('s7w', 'in', 100);
+    addClass('s7t', 'in', 350);
+    addClass('s7s', 'in', 700);
+    addClass('s7b', 'in', 1100);
+    addClass('s7f', 'in', 1600);
   }
 };
 
 function showScene(idx) {
-  // hide all
   SCENES.forEach(id => document.getElementById(id).classList.remove('active'));
-  // show current
-  const sceneEl = document.getElementById(SCENES[idx]);
-  sceneEl.classList.add('active');
-  // update counter
+  document.getElementById(SCENES[idx]).classList.add('active');
   document.getElementById('counter').textContent = `${idx+1} / ${SCENES.length}`;
-  // update progress
   document.getElementById('progress').style.width = `${((idx+1)/SCENES.length)*100}%`;
-  // run animation
   if (animations[SCENES[idx]]) animations[SCENES[idx]]();
-  // schedule next
   clearTimeout(timer);
-  if (idx < SCENES.length - 1) {
-    timer = setTimeout(() => nextScene(), DURATIONS[idx]);
-  }
+  if (idx < SCENES.length - 1) timer = setTimeout(nextScene, DURATIONS[idx]);
 }
 
-function nextScene() {
-  if (current < SCENES.length - 1) {
-    current++;
-    showScene(current);
-  }
-}
+function nextScene() { if (current < SCENES.length - 1) showScene(++current); }
+function prevScene() { if (current > 0) showScene(--current); }
 
-function prevScene() {
-  if (current > 0) {
-    current--;
-    showScene(current);
-  }
-}
-
-// keyboard navigation
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === ' ') nextScene();
   if (e.key === 'ArrowLeft') prevScene();
 });
+document.addEventListener('click', e => { if (e.target.id !== 'skip') nextScene(); });
 
-// click navigation
-document.addEventListener('click', (e) => {
-  if (e.target.id !== 'skip') nextScene();
-});
-
-// start
 showScene(0);
 </script>
 </body>
